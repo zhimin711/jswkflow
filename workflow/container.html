@@ -45,6 +45,10 @@
 	 function changeMod(type){
 		container.operationMode = type;
 	 }
+
+	 function clearLog(){
+		log.clear();
+	 }
   //-->
   </SCRIPT>
  </HEAD>
@@ -66,5 +70,6 @@
 	<input type="button" onclick="changeMod(Container.CHOSEN_MOD)" value="选择"/>
 	<input type="button" onclick="changeMod(Container.NODE_MOD)" value="节点"/>
 	<input type="button" onclick="changeMod(Container.LINE_MOD)" value="直线"/>
+	<input type="button" onclick="clearLog()" value="clearLog"/>
  </BODY>
 </html>
