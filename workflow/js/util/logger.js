@@ -44,6 +44,14 @@ var Logger = function (className){
 		$("#system-log-div").html("");
 	}
 
+	this.dir = function(obj){
+		var str = obj+":<br/>";
+		for(var i in obj){
+			str += i+":"+obj[i]+"<br/>";
+		}
+		$("#system-log-div").html($("#system-log-div").html()+str);
+	}
+
 };
 
 
@@ -54,4 +62,4 @@ SystemContext.LOG_LEVEL_WARN = 4;
 SystemContext.LOG_LEVEL_INFO = 6;
 SystemContext.LOG_LEVEL_DEBUG = 7;
 
-SystemContext.LOG_LEVEL = SystemContext.LOG_LEVEL_INFO;
+SystemContext.LOG_LEVEL = SystemContext.LOG_LEVEL_ERROR;
