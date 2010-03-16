@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <script type="text/javascript" src="js/util/jquery-1.4.1.js"></script>
+  <script type="text/javascript" src="js/util/htmlutil.js"></script>
+  <script type="text/javascript" src="js/util/logger.js"></script>
+
+  <script type="text/javascript" src="js/core/TaskNode.js"></script>
+  <script type="text/javascript" src="js/core/Container.js"></script>
+  <script type="text/javascript" src="js/core/Line.js"></script>
+  <style>
+		v\:*{behavior:url(#default#VML);}
+  </style>
+  <style>
+	div.rect-zone{
+		*font-size:0px;
+		background:blue;
+	}
+
+	div.workflow-node{
+		background-color: #ECE9D8;
+		border-left: #ffeeff 1px solid;
+		border-top: #ffeeff 1px solid;
+		border-right: #ACA899 1px solid;
+		border-bottom: #ACA899 1px solid;
+		width:100px;
+		height:30px;
+	}
+
+	div.workflow-container{
+		width:600px;
+		height:600px;
+		border:1px solid black;
+		left:50%;
+		margin-left:-300px;
+	}
+  </style>
+  <SCRIPT LANGUAGE="JavaScript">
+  <!--
+	 function changeMod(type){
+		container.operationMode = type;
+	 }
+  //-->
+  </SCRIPT>
+ </HEAD>
+
+ <BODY>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+	<!--
+		var log = new Logger("");
+		//var node = new TaskNode(100,40);
+		//HtmlUtil.append($("body"),node.getUI());
+		var container = new Container();
+		HtmlUtil.append($("body"),container.getUI());
+		var containerPosition = container.getPosition();
+		log.info(containerPosition.x+" : "+containerPosition.y);
+	//-->
+	</SCRIPT>
+
+	<input type="button" onclick="changeMod(Container.CHOSEN_MOD)" value="选择"/>
+	<input type="button" onclick="changeMod(Container.NODE_MOD)" value="节点"/>
+	<input type="button" onclick="changeMod(Container.LINE_MOD)" value="直线"/>
+ </BODY>
+</html>
