@@ -6,7 +6,7 @@ function Container(){
 	this.startDraw = false;
 
 	var ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;"></div>');
-	var canvas = HtmlUtil.newElement('<v:group style="position:absolute;left:0;top:0;z-index:1;width:600px;height:600px;" coordsize="600,600"></v:group>');
+	var canvas = HtmlUtil.newElement('<v:group style="position:absolute;left:0;top:0;z-index:11;width:600px;height:600px;" coordsize="600,600"></v:group>');
 
 	HtmlUtil.append(ui,canvas);
 	
@@ -22,13 +22,18 @@ function Container(){
 		HtmlUtil.prepend(ui,node.getUI()); 
 	}
 
-	this.addLine = function(line){
+	this.addLine = function(line,mousePos){
 		log.info("add line..........");
-		var fromPos = this.fromNode.getPosition();
-		var containerPos = this.getPosition();
-		line.setFrom(fromPos.x-containerPos.x,fromPos.y-containerPos.y);
-		line.setTo(fromPos.x-containerPos.x,fromPos.y-containerPos.y);
-		HtmlUtil.prepend(canvas,line.getUI()); 
+		var fromNodePos = this.fromNode.node.getPosition();//开始拖拽的节点的绝对位置
+		var containerPos = this.getPosition();//获得container的绝对位置
+		//目前由于线是在node下方，所以起始位置就用fromRect的位置（左上角）
+		var fromPos = container.fromNode.getEdgePos(mousePos,container);
+		line.setFrom(fromPos.x,fromPos.y);
+		line.setTo(fromPos.x,fromPos.y);
+		//设置线在起始节点上的相对位置，以便以后节点移动时更新
+		line.beginPosOffset = {x:fromPos.x-fromNodePos.x+containerPos.x,y:fromPos.y-fromNodePos.y+containerPos.y};
+		HtmlUtil.prepend(canvas,line.getUI());
+		return {x:mousePos.x,y:mousePos.y};
 	}
 
 	this.deleteLine = function(line){
@@ -50,6 +55,7 @@ function ContainerListener(container){
 	var line;
 	var containerPosition;
 	
+	var startPos;
 
 	function onClick(e){
 		var mousePos = HtmlUtil.mouseCoords(e);	
@@ -76,8 +82,9 @@ function ContainerListener(container){
 			if(container.fromNode != null){
 				log.info("canvas mouse down....."+container.fromNode);
 				line = new Line();
-				container.addLine(line);
-				container.startDraw = true;
+				var mousePos = HtmlUtil.mouseCoords(e);
+				startPos = container.addLine(line,mousePos);//返回鼠标开始画线的位置
+				container.startDraw = true;//将container设为开始画线
 				$(container.getUI()).bind('mousemove',onMouseMove);
 				$(container.getUI()).bind('mouseup',onMouseUp);
 				containerPosition = container.getPosition();
@@ -91,7 +98,13 @@ function ContainerListener(container){
 	function onMouseMove(e){
 		e  = e || window.event;
 		var mousePos = HtmlUtil.mouseCoords(e);
-		line.setTo(mousePos.x-containerPosition.x,mousePos.y-containerPosition.y);
+
+		if(mousePos.x<=startPos.x){
+			line.setTo(mousePos.x-containerPosition.x+3,mousePos.y-containerPosition.y+2);
+		}else{
+			line.setTo(mousePos.x-containerPosition.x-3,mousePos.y-containerPosition.y-2);
+		}
+		
 		e.stopPropagation();
 	}
 
@@ -103,9 +116,19 @@ function ContainerListener(container){
 		if(container.toNode == null){
 			container.deleteLine(line);
 		}else{
-			var toPos = container.toNode.getToPos(mousePos,container);
+			var toPos = container.toNode.getEdgePos(mousePos,container);
 			line.setTo(toPos.x,toPos.y);
+			//设置线在结束节点上的相对位置，以便以后节点移动时更新
+			var toNodePos = container.toNode.node.getPosition();//结束线所在节点的绝对位置
+			var containerPos = container.getPosition();//获得container的绝对位置
+			line.endPosOffset = {x:toPos.x-(toNodePos.x-containerPos.x),y:toPos.y-(toNodePos.y-containerPos.y)};
+			line.setArrow();
+			//将线分别赋值给连接的两端node的beginLine和endLine
+			container.fromNode.addBeginLine(line);
+			container.toNode.addEndLine(line);
 		}
+
+
 		$(container.getUI()).unbind('mousemove');
 		$(container.getUI()).unbind('mouseup');
 		container.toNode = null;

@@ -31,7 +31,16 @@ function TaskNode(w,h,container){
 		return ui;
 	}
 
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI());
+	}
+
 	new NodeListener(this);
+
+	//从这个节点出去的线的集合
+	this.beginLine = [];
+	//指向这个节点的线的集合
+	this.endLine = [];
 }
 
 function NodeListener(node){
@@ -68,11 +77,27 @@ function NodeListener(node){
 	function onMouseMove(e){
 		e  = e || window.event;
 		var mousePos = HtmlUtil.mouseCoords(e);	
-		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0)+ 'px';
-		HtmlUtil.setTop(node.getUI(),top);
+		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0);
+		HtmlUtil.setTop(node.getUI(),top + 'px');
 
-		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0) + 'px';
-		HtmlUtil.setLeft(node.getUI(),left);
+		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
+		HtmlUtil.setLeft(node.getUI(),left + 'px');
+
+		//将连接在该节点上的线的起止坐标更新
+		//从节点延伸出去的线，更新from
+		for(var i=0,j=node.beginLine.length;i<j;i++){
+			var line = node.beginLine[i];
+			var lineOffset = line.beginPosOffset;
+			line.setFrom(lineOffset.x+left,lineOffset.y+top);
+		}
+		for(var i=0,j=node.endLine.length;i<j;i++){
+			var line = node.endLine[i];
+			//log.dir(line.endPosOffset)
+			log.info(left+":"+top);
+			var lineOffset = line.endPosOffset;
+			line.setTo(lineOffset.x+left,lineOffset.y+top);
+		}
+		//连接到节点的线，更新to
 
 		e.stopPropagation();
 	}
@@ -125,7 +150,7 @@ function RectZone(node,type,w,h){
 		return HtmlUtil.getCoords(this.getUI());
 	}
 
-	this.getToPos = function(mousePos,container){
+	this.getEdgePos = function(mousePos,container){
 		//log.info("宽："+HtmlUtil.getWidth(this.getUI()))
 		var borderWidth = 1;
 		var containerPos = container.getPosition();
@@ -137,12 +162,12 @@ function RectZone(node,type,w,h){
 				result.y = recPos.y-containerPos.y - borderWidth;
 				break;
 			case RectZone.RIGHT:
-				result.x = recPos.x-containerPos.x+this.w + borderWidth;
+				result.x = recPos.x-containerPos.x+this.w;
 				result.y = mousePos.y-containerPos.y;
 				break;
 			case RectZone.BOTTOM:
 				result.x = mousePos.x-containerPos.x;
-				result.y = recPos.y-containerPos.y + this.h + borderWidth;
+				result.y = recPos.y-containerPos.y + this.h;
 				break;
 			case RectZone.LEFT:
 				result.x = recPos.x-containerPos.x - borderWidth;
@@ -151,6 +176,15 @@ function RectZone(node,type,w,h){
 		}
 		return result;
 	}
+
+	this.addBeginLine = function(line){
+		this.node.beginLine.push(line);
+	}
+
+	this.addEndLine = function(line){
+		this.node.endLine.push(line);
+	}
+	
 	
 	new RectZoneListener(this);
 }
@@ -164,11 +198,11 @@ function RectZoneListener(rect){
 	var container = rect.node.container;
 
 	function onMouseOver(e){
-		log.info("is drawing ...."+container.startDraw);
+		log.info("when mouse over is drawing "+container.startDraw);
 		if(!container.startDraw){
 			container.fromNode = rect;
 		}else{
-			
+			log.info("set to node....");
 			container.toNode = rect;
 		}
 		
@@ -176,7 +210,7 @@ function RectZoneListener(rect){
 	}
 
 	function onMouseOut(e){
-		log.info("is drawing ...."+container.startDraw);
+		log.info("node mouse over is drawing ...."+container.startDraw);
 		if(!container.startDraw){
 			container.fromNode = null;
 		}else{
