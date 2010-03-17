@@ -28,6 +28,9 @@ function Line(){
 
 }
 
+function LineListener(line){
+	
+}
 
 function PolyLine(){
 	var ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
