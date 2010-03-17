@@ -11,6 +11,7 @@
   <script type="text/javascript" src="js/util/logger.js"></script>
 
   <script type="text/javascript" src="js/core/TaskNode.js"></script>
+  <script type="text/javascript" src="js/core/RectZone.js"></script>
   <script type="text/javascript" src="js/core/Container.js"></script>
   <script type="text/javascript" src="js/core/Line.js"></script>
   <style>
@@ -39,6 +40,7 @@
 		left:50%;
 		margin-left:-300px;
 	}
+
   </style>
   <SCRIPT LANGUAGE="JavaScript">
   <!--
@@ -64,12 +66,16 @@
 		HtmlUtil.append($("body"),container.getUI());
 		var containerPosition = container.getPosition();
 		log.info(containerPosition.x+" : "+containerPosition.y);
+
+
+		
 	//-->
 	</SCRIPT>
 
 	<input type="button" onclick="changeMod(Container.CHOSEN_MOD)" value="选择"/>
 	<input type="button" onclick="changeMod(Container.NODE_MOD)" value="节点"/>
 	<input type="button" onclick="changeMod(Container.LINE_MOD)" value="直线"/>
+	<input type="button" onclick="changeMod(Container.POLYLINE_MOD)" value="折线"/>
 	<input type="button" onclick="clearLog()" value="clearLog"/>
  </BODY>
 </html>

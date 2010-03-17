@@ -86,6 +86,10 @@ HtmlUtil.prepend = function(target,obj){
 	$(target).prepend($(obj));
 }
 
+HtmlUtil.after = function(target,obj){
+	$(target).after($(obj));
+}
+
 HtmlUtil.show = function(el){
 	
 	$(el).show();
