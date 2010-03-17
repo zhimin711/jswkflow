@@ -30,7 +30,7 @@ function Line(){
 
 
 function PolyLine(){
-	var ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-indez:11;"></v:polyline>');
+	var ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
 	var arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
 
 	var fromPos;
