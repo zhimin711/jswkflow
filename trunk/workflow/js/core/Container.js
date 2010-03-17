@@ -1,14 +1,14 @@
 function Container(){
 	this.operationMode = Container.NODE_MOD;
 	
-	this.fromNode = null;
-	this.toNode = null;
+	this.fromNode = null;// 线从哪个热区(RectZone)开始
+	this.toNode = null;//线在哪个热区(RectZone)结束
 	this.startDraw = false;
 
 	var ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;"></div>');
-	var canvas = HtmlUtil.newElement('<v:group style="position:absolute;left:0;top:0;z-index:11;width:600px;height:600px;" coordsize="600,600"></v:group>');
+	//var canvas = HtmlUtil.newElement('<v:group style="position:absolute;left:0;top:0;z-index:11;width:600px;height:600px;" coordsize="600,600"></v:group>');
 
-	HtmlUtil.append(ui,canvas);
+	//HtmlUtil.append(ui,canvas);
 	
 	this.getUI = function(){
 		return ui;
@@ -32,8 +32,12 @@ function Container(){
 		line.setTo(fromPos.x,fromPos.y);
 		//设置线在起始节点上的相对位置，以便以后节点移动时更新
 		line.beginPosOffset = {x:fromPos.x-fromNodePos.x+containerPos.x,y:fromPos.y-fromNodePos.y+containerPos.y};
-		HtmlUtil.prepend(canvas,line.getUI());
+		HtmlUtil.prepend(ui,line.getUI());
 		return {x:mousePos.x,y:mousePos.y};
+	}
+
+	this.addPolyLine = function(polyLine){
+		HtmlUtil.prepend(ui,polyLine.getUI());
 	}
 
 	this.deleteLine = function(line){
@@ -50,6 +54,7 @@ function Container(){
 Container.CHOSEN_MOD = 0;
 Container.NODE_MOD = 1;
 Container.LINE_MOD = 2;
+Container.POLYLINE_MOD = 3;2010-3-17
 
 function ContainerListener(container){
 	var line;
@@ -77,13 +82,13 @@ function ContainerListener(container){
 
 	function onMouseDown(e){
 		
-		if(container.operationMode == Container.LINE_MOD){//如果是画线模式下
+		if(container.operationMode == Container.LINE_MOD || container.operationMode == Container.POLYLINE_MOD){//如果是画线模式下
 			//如果fromnode有值，说明可以开始画线
 			if(container.fromNode != null){
 				log.info("canvas mouse down....."+container.fromNode);
 				line = new Line();
 				var mousePos = HtmlUtil.mouseCoords(e);
-				startPos = container.addLine(line,mousePos);//返回鼠标开始画线的位置
+				startPos = container.addLine(line,mousePos);//设置鼠标开始画线的位置
 				container.startDraw = true;//将container设为开始画线
 				$(container.getUI()).bind('mousemove',onMouseMove);
 				$(container.getUI()).bind('mouseup',onMouseUp);
@@ -122,10 +127,37 @@ function ContainerListener(container){
 			var toNodePos = container.toNode.node.getPosition();//结束线所在节点的绝对位置
 			var containerPos = container.getPosition();//获得container的绝对位置
 			line.endPosOffset = {x:toPos.x-(toNodePos.x-containerPos.x),y:toPos.y-(toNodePos.y-containerPos.y)};
-			line.setArrow();
-			//将线分别赋值给连接的两端node的beginLine和endLine
-			container.fromNode.addBeginLine(line);
-			container.toNode.addEndLine(line);
+			if(container.operationMode == Container.LINE_MOD){//如果是画直线模式下
+				line.setArrow();
+				
+				//将线分别赋值给连接的两端node的beginLine和endLine
+				container.fromNode.addBeginLine(line);
+				container.toNode.addEndLine(line);
+			}
+			if(container.operationMode == Container.POLYLINE_MOD){//如果是画折线的模式
+				//根据鼠标来确定方向
+				//var direction = _getDirection(startPos,mousePos);
+				//根据fromZone来获得from to middle的坐标
+				var middlePos = container.fromNode.getMiddlePoints(line.fromPos,line.toPos);
+				
+				
+				//构造折线，将折线画在container上，
+				var polyLine = new PolyLine();
+				container.addPolyLine(polyLine);
+				polyLine.setFrom(line.fromPos.x,line.fromPos.y);
+				polyLine.setTo(line.toPos.x,line.toPos.y);
+				polyLine.setMiddle(middlePos.x,middlePos.y);
+				polyLine.beginPosOffset = line.beginPosOffset;
+				polyLine.endPosOffset = line.endPosOffset;
+				polyLine.setArrow();
+				polyLine.addController(container);
+				//然后删除line
+				container.deleteLine(line);
+				container.fromNode.addBeginPolyLine(polyLine);
+				container.toNode.addEndPolyLine(polyLine);
+				
+			}
+
 		}
 
 
@@ -135,6 +167,22 @@ function ContainerListener(container){
 		container.fromNode = null;
 		container.startDraw = false;
 		e.stopPropagation();
+	}
+
+
+	function _getDirection(beginPos,endPos){
+	    if(endPos.x>=beginPos.x && endPos.y<=endPos.y){
+			return PolyLine.DIRECTION_RT;
+		}
+		if(endPos.x>=beginPos.x && endPos.y>=endPos.y){
+			return PolyLine.DIRECTION_RB;
+		}
+		if(endPos.x<beginPos.x && endPos.y<endPos.y){
+			return PolyLine.DIRECTION_LT;
+		}
+		if(endPos.x<beginPos.x && endPos.y>endPos.y){
+			return PolyLine.DIRECTION_LB;
+		}
 	}
 
 	$(container.getUI()).bind('click',onClick);
