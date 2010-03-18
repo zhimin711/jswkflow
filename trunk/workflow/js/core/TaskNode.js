@@ -166,18 +166,26 @@ function NodeListener(node){
 
 	function onMouseUp(e){
 		//将连接在该节点上的线的起止坐标更新
-		//从节点延伸出去的线，更新from
+		//从节点延伸出去的直线，更新from
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			line.setControllerPosition();
 		}
-		//连接到节点的线，更新to
+		//连接到节点的直线，更新to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			line.setControllerPosition();
 		}
-
-
+		//从节点延伸出去的折线，更新from
+		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
+			var line = node.beginPolyLine[i];
+			line.setControllerPosition();
+		}
+		//连接到节点的折线，更新to
+		for(var i=0,j=node.endPolyLine.length;i<j;i++){
+			var line = node.endPolyLine[i];
+			line.setControllerPosition();
+		}
 		$(node.getUI()).unbind('mousemove',onMouseMove);
 		$(node.getUI()).unbind('mouseup',onMouseUp);
 		e.stopPropagation();
