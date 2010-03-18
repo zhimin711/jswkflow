@@ -85,7 +85,7 @@ function Container(){
 		}
 
 		for(var i = 0,j=this.polyLines.length;i<j;i++){
-			//this.polyLines[i].hideController();
+			this.polyLines[i].hideController();
 		}
 	}
 }
@@ -174,18 +174,18 @@ function ContainerListener(container){
 				//根据鼠标来确定方向
 				//var direction = _getDirection(startPos,mousePos);
 				//根据fromZone来获得from to middle的坐标
-				var middlePos = container.fromNode.getMiddlePoints(line.fromPos,line.toPos);
+				var middlePos = container.fromNode.getMiddlePoints(line.getFrom(),line.getTo());
 				
 				
 				//构造折线，将折线画在container上，
-				var polyLine = new PolyLine();
+				var polyLine = new PolyLine(container);
 				container.addPolyLine(polyLine);
-				polyLine.setFrom(line.fromPos.x,line.fromPos.y);
-				polyLine.setTo(line.toPos.x,line.toPos.y);
+				polyLine.setFrom(line.getFrom().x,line.getFrom().y);
+				polyLine.setTo(line.getTo().x,line.getTo().y);
 				polyLine.setMiddle(middlePos.x,middlePos.y);
 				polyLine.beginPosOffset = line.beginPosOffset;
 				polyLine.endPosOffset = line.endPosOffset;
-				polyLine.setArrow();
+				polyLine.finishLine();
 				polyLine.addController(container);
 				//然后删除line
 				container.deleteComponent(line);
