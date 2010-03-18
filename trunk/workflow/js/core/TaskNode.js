@@ -1,5 +1,7 @@
 function TaskNode(w,h,container){
 	this.container = container;
+	this.componentType = Constants.COMPONENT_TYPE_NODE;
+
 	var ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
 
 	HtmlUtil.setWidth(ui,w);
@@ -44,6 +46,34 @@ function TaskNode(w,h,container){
 
 	this.beginPolyLine = [];
 	this.endPolyLine = [];
+
+	// 删除UI 每个component都得有 node line polyline
+	this.removeUI = function(){
+		//节点本身删除
+		HtmlUtil.remove(this.getUI());
+		//删除节点上的热区
+		this.rectDiv_top = null;
+		this.rectDiv_left = null;
+		this.rectDiv_right = null;
+		this.rectDiv_bottom = null;
+		//节点上的line删除
+		for(var i =0,j=this.beginLine.length;i<j;i++){
+			var line = this.beginLine[i];
+			this.container.deleteComponent(line);
+		}
+		for(var i =0,j=this.endLine.length;i<j;i++){
+			var line = this.endLine[i];
+			this.container.deleteComponent(line);
+		}
+		for(var i =0,j=this.beginPolyLine.length;i<j;i++){
+			var line = this.beginPolyLine[i];
+			this.container.deleteComponent(line);
+		}
+		for(var i =0,j=this.endPolyLine.length;i<j;i++){
+			var line = this.endPolyLine[i];
+			this.container.deleteComponent(line);
+		}
+	}
 }
 
 function NodeListener(node){
@@ -54,10 +84,8 @@ function NodeListener(node){
 
 
 	function onClick(e){
-		HtmlUtil.show(node.rectDiv_top.getUI());
-		HtmlUtil.show(node.rectDiv_left.getUI());
-		HtmlUtil.show(node.rectDiv_right.getUI());
-		HtmlUtil.show(node.rectDiv_bottom.getUI());
+		
+		
 		e.stopPropagation();
 	}
 
@@ -120,7 +148,10 @@ function NodeListener(node){
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Container.CHOSEN_MOD || container.operationMode == Container.NODE_MOD){//如果是画节点模式下
+		//将container上所有选中的取消选中
+		container.unSelectAll();
+		container.currentSelectedComponent = node;
+		if(container.operationMode == Constants.CHOSEN_MOD || container.operationMode == Constants.NODE_MOD){//如果是画节点模式下
 			//log.info("node mouse down......"+container.operationMode)
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
@@ -134,7 +165,19 @@ function NodeListener(node){
 	}
 
 	function onMouseUp(e){
-		
+		//将连接在该节点上的线的起止坐标更新
+		//从节点延伸出去的线，更新from
+		for(var i=0,j=node.beginLine.length;i<j;i++){
+			var line = node.beginLine[i];
+			line.setControllerPosition();
+		}
+		//连接到节点的线，更新to
+		for(var i=0,j=node.endLine.length;i<j;i++){
+			var line = node.endLine[i];
+			line.setControllerPosition();
+		}
+
+
 		$(node.getUI()).unbind('mousemove',onMouseMove);
 		$(node.getUI()).unbind('mouseup',onMouseUp);
 		e.stopPropagation();

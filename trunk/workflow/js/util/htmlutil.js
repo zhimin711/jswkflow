@@ -99,6 +99,9 @@ HtmlUtil.hide = function(el){
 	$(el).hide();
 }
 
+HtmlUtil.remove = function(el){
+	$(el).remove();
+}
 
 
 

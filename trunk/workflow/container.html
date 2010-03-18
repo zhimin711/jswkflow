@@ -9,11 +9,15 @@
   <script type="text/javascript" src="js/util/jquery-1.4.1.js"></script>
   <script type="text/javascript" src="js/util/htmlutil.js"></script>
   <script type="text/javascript" src="js/util/logger.js"></script>
+  <script type="text/javascript" src="js/util/array.js"></script>
+  <script type="text/javascript" src="js/util/Contants.js"></script>
 
   <script type="text/javascript" src="js/core/TaskNode.js"></script>
   <script type="text/javascript" src="js/core/RectZone.js"></script>
   <script type="text/javascript" src="js/core/Container.js"></script>
   <script type="text/javascript" src="js/core/Line.js"></script>
+  <script type="text/javascript" src="js/core/PolyLine.js"></script>
+
   <style>
 		v\:*{behavior:url(#default#VML);}
   </style>
@@ -52,6 +56,10 @@
 	 function clearLog(){
 		log.clear();
 	 }
+
+	 function removeComponent(){
+		container.deleteComponent(container.currentSelectedComponent);
+	 }
   //-->
   </SCRIPT>
  </HEAD>
@@ -73,10 +81,11 @@
 	//-->
 	</SCRIPT>
 
-	<input type="button" onclick="changeMod(Container.CHOSEN_MOD)" value="选择"/>
-	<input type="button" onclick="changeMod(Container.NODE_MOD)" value="节点"/>
-	<input type="button" onclick="changeMod(Container.LINE_MOD)" value="直线"/>
-	<input type="button" onclick="changeMod(Container.POLYLINE_MOD)" value="折线"/>
+	<input type="button" onclick="changeMod(Constants.CHOSEN_MOD)" value="选择"/>
+	<input type="button" onclick="changeMod(Constants.NODE_MOD)" value="节点"/>
+	<input type="button" onclick="changeMod(Constants.LINE_MOD)" value="直线"/>
+	<input type="button" onclick="changeMod(Constants.POLYLINE_MOD)" value="折线"/>
+	<input type="button" onclick="removeComponent()" value="删除"/>
 	<input type="button" onclick="clearLog()" value="clearLog"/>
  </BODY>
 </html>

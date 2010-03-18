@@ -1,5 +1,5 @@
 function Container(){
-	this.operationMode = Container.NODE_MOD;
+	this.operationMode = Constants.NODE_MOD;
 	
 	this.fromNode = null;// 线从哪个热区(RectZone)开始
 	this.toNode = null;//线在哪个热区(RectZone)结束
@@ -14,12 +14,18 @@ function Container(){
 		return ui;
 	}
 
+    this.lines = [];
+	this.nodes = [];
+	this.polyLines = [];
+	this.currentSelectedComponent;
+
 
 	this.addNode = function(node,mousePos){
 		var containerPos = this.getPosition();
 		HtmlUtil.setLeft(node.getUI(),(mousePos.x-containerPos.x)+"px");
 		HtmlUtil.setTop(node.getUI(),(mousePos.y-containerPos.y)+"px");
 		HtmlUtil.prepend(ui,node.getUI()); 
+		this.nodes.push(node);
 	}
 
 	this.addLine = function(line,mousePos){
@@ -33,28 +39,58 @@ function Container(){
 		//设置线在起始节点上的相对位置，以便以后节点移动时更新
 		line.beginPosOffset = {x:fromPos.x-fromNodePos.x+containerPos.x,y:fromPos.y-fromNodePos.y+containerPos.y};
 		HtmlUtil.prepend(ui,line.getUI());
+		this.lines.push(line);
 		return {x:mousePos.x,y:mousePos.y};
 	}
 
 	this.addPolyLine = function(polyLine){
 		HtmlUtil.prepend(ui,polyLine.getUI());
+		this.polyLines.push(polyLine);
 	}
 
-	this.deleteLine = function(line){
-		$(line.getUI()).remove();
-		line = null;//删除line对象
+	this.deleteComponent = function(component){
+		if(!component){
+			return;
+		}
+		component.removeUI();
+		switch(component.componentType){
+			case Constants.COMPONENT_TYPE_LINE:
+				var index = this.lines.indexOf(component);
+				this.lines.removeByIndex(index);
+				break;
+			case Constants.COMPONENT_TYPE_NODE:
+				var index = this.nodes.indexOf(component);
+				this.nodes.removeByIndex(index);
+				break;
+			case Constants.COMPONENT_TYPE_POLYLINE:
+				var index = this.polyLines.indexOf(component);
+				this.polyLines.removeByIndex(index);
+				break;
+		}
+		component = null;
 	}
 
 	this.getPosition = function(){
 		return HtmlUtil.getCoords(this.getUI());
 	}
 	new ContainerListener(this);
+
+	this.unSelectAll = function(){
+		for(var i = 0,j=this.lines.length;i<j;i++){
+			this.lines[i].hideController();
+		}
+
+		for(var i = 0,j=this.nodes.length;i<j;i++){
+			//this.nodes[i].hideController();
+		}
+
+		for(var i = 0,j=this.polyLines.length;i<j;i++){
+			//this.polyLines[i].hideController();
+		}
+	}
 }
 
-Container.CHOSEN_MOD = 0;
-Container.NODE_MOD = 1;
-Container.LINE_MOD = 2;
-Container.POLYLINE_MOD = 3;2010-3-17
+
 
 function ContainerListener(container){
 	var line;
@@ -65,15 +101,15 @@ function ContainerListener(container){
 	function onClick(e){
 		var mousePos = HtmlUtil.mouseCoords(e);	
 		switch(container.operationMode){
-			case Container.CHOSEN_MOD:
+			case Constants.CHOSEN_MOD:
 				
 				break;
-			case Container.NODE_MOD:
+			case Constants.NODE_MOD:
 				//如果出于添加节点模式，单击后创建一个node，然后加到鼠标位置
 				var node = new TaskNode(100,40,container);
 				container.addNode(node,mousePos);
 				break;
-			case Container.LINE_MOD:
+			case Constants.LINE_MOD:
 
 				break;
 			
@@ -82,11 +118,11 @@ function ContainerListener(container){
 
 	function onMouseDown(e){
 		
-		if(container.operationMode == Container.LINE_MOD || container.operationMode == Container.POLYLINE_MOD){//如果是画线模式下
+		if(container.operationMode == Constants.LINE_MOD || container.operationMode == Constants.POLYLINE_MOD){//如果是画线模式下
 			//如果fromnode有值，说明可以开始画线
 			if(container.fromNode != null){
 				log.info("canvas mouse down....."+container.fromNode);
-				line = new Line();
+				line = new Line(container);
 				var mousePos = HtmlUtil.mouseCoords(e);
 				startPos = container.addLine(line,mousePos);//设置鼠标开始画线的位置
 				container.startDraw = true;//将container设为开始画线
@@ -119,7 +155,7 @@ function ContainerListener(container){
 		var mousePos = HtmlUtil.mouseCoords(e);
 		//如果松开鼠标的位置是画线区，即toNode有值的话，画线，否则，删除line
 		if(container.toNode == null){
-			container.deleteLine(line);
+			container.deleteComponent(line);
 		}else{
 			var toPos = container.toNode.getEdgePos(mousePos,container);
 			line.setTo(toPos.x,toPos.y);
@@ -127,14 +163,14 @@ function ContainerListener(container){
 			var toNodePos = container.toNode.node.getPosition();//结束线所在节点的绝对位置
 			var containerPos = container.getPosition();//获得container的绝对位置
 			line.endPosOffset = {x:toPos.x-(toNodePos.x-containerPos.x),y:toPos.y-(toNodePos.y-containerPos.y)};
-			if(container.operationMode == Container.LINE_MOD){//如果是画直线模式下
-				line.setArrow();
+			if(container.operationMode == Constants.LINE_MOD){//如果是画直线模式下
+				line.finishLine();
 				
 				//将线分别赋值给连接的两端node的beginLine和endLine
 				container.fromNode.addBeginLine(line);
 				container.toNode.addEndLine(line);
 			}
-			if(container.operationMode == Container.POLYLINE_MOD){//如果是画折线的模式
+			if(container.operationMode == Constants.POLYLINE_MOD){//如果是画折线的模式
 				//根据鼠标来确定方向
 				//var direction = _getDirection(startPos,mousePos);
 				//根据fromZone来获得from to middle的坐标
@@ -152,7 +188,7 @@ function ContainerListener(container){
 				polyLine.setArrow();
 				polyLine.addController(container);
 				//然后删除line
-				container.deleteLine(line);
+				container.deleteComponent(line);
 				container.fromNode.addBeginPolyLine(polyLine);
 				container.toNode.addEndPolyLine(polyLine);
 				
@@ -170,20 +206,7 @@ function ContainerListener(container){
 	}
 
 
-	function _getDirection(beginPos,endPos){
-	    if(endPos.x>=beginPos.x && endPos.y<=endPos.y){
-			return PolyLine.DIRECTION_RT;
-		}
-		if(endPos.x>=beginPos.x && endPos.y>=endPos.y){
-			return PolyLine.DIRECTION_RB;
-		}
-		if(endPos.x<beginPos.x && endPos.y<endPos.y){
-			return PolyLine.DIRECTION_LT;
-		}
-		if(endPos.x<beginPos.x && endPos.y>endPos.y){
-			return PolyLine.DIRECTION_LB;
-		}
-	}
+	
 
 	$(container.getUI()).bind('click',onClick);
 	$(container.getUI()).bind('mousedown',onMouseDown);
