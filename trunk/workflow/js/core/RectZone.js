@@ -22,19 +22,19 @@ function RectZone(node,type,w,h){
 		var recPos = this.getPosition();
 		var result = {x:0,y:0};
 		switch(this.type){
-			case RectZone.TOP:
+			case Constants.RectZone_TOP:
 				result.x = mousePos.x-containerPos.x ;
 				result.y = recPos.y-containerPos.y - borderWidth;
 				break;
-			case RectZone.RIGHT:
+			case Constants.RectZone_RIGHT:
 				result.x = recPos.x-containerPos.x+this.w;
 				result.y = mousePos.y-containerPos.y;
 				break;
-			case RectZone.BOTTOM:
+			case Constants.RectZone_BOTTOM:
 				result.x = mousePos.x-containerPos.x;
 				result.y = recPos.y-containerPos.y + this.h;
 				break;
-			case RectZone.LEFT:
+			case Constants.RectZone_LEFT:
 				result.x = recPos.x-containerPos.x - borderWidth;
 				result.y = mousePos.y-containerPos.y;
 				break;
@@ -60,21 +60,14 @@ function RectZone(node,type,w,h){
 	}
 
 	this.getMiddlePoints = function(fromPos,toPos){
-		if(this.type == RectZone.TOP || this.type == RectZone.BOTTOM){//top和bottom热区
+		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){//top和bottom热区
 			return  {x:fromPos.x,y:toPos.y};//中间点x不变，y由toPos定
 		}else{//left right 热区
 			return  {x:toPos.x,y:fromPos.y};//中间点y不变，x由fromPos定
 		}
 	}
-	
-	
 	new RectZoneListener(this);
 }
-RectZone.TOP = 1;
-RectZone.RIGHT = 2;
-RectZone.BOTTOM = 3;
-RectZone.LEFT = 4;
-
 
 function RectZoneListener(rect){
 	var container = rect.node.container;
@@ -87,8 +80,6 @@ function RectZoneListener(rect){
 			//log.info("set to node....");
 			container.toNode = rect;
 		}
-		
-		//e.stopPropagation();
 	}
 
 	function onMouseOut(e){
@@ -99,9 +90,7 @@ function RectZoneListener(rect){
 			
 			container.toNode = null;
 		}
-		//e.stopPropagation();
 	}
-
 	$(rect.getUI()).bind('mouseover',onMouseOver);
 	$(rect.getUI()).bind('mouseout',onMouseOut);
 }

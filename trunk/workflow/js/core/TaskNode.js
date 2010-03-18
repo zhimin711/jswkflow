@@ -7,19 +7,19 @@ function TaskNode(w,h,container){
 	HtmlUtil.setWidth(ui,w);
 	HtmlUtil.setHeight(ui,h);
 
-	this.rectDiv_top = new RectZone(this,RectZone.TOP,50,10);
+	this.rectDiv_top = new RectZone(this,Constants.RectZone_TOP,50,10);
 	HtmlUtil.setLeft(this.rectDiv_top.getUI(),(Math.round(w/2)-Math.round(this.rectDiv_top.w/2))+"px");
 	HtmlUtil.setTop(this.rectDiv_top.getUI(),"0px");
 
-	this.rectDiv_left = new RectZone(this,RectZone.LEFT,10,20);
+	this.rectDiv_left = new RectZone(this,Constants.RectZone_LEFT,10,20);
 	HtmlUtil.setLeft(this.rectDiv_left.getUI(),"0px");
 	HtmlUtil.setTop(this.rectDiv_left.getUI(),(Math.round(h/2)-Math.round(this.rectDiv_left.h/2))+"px");
 	
-	this.rectDiv_right = new RectZone(this,RectZone.RIGHT,10,20);
+	this.rectDiv_right = new RectZone(this,Constants.RectZone_RIGHT,10,20);
 	HtmlUtil.setRight(this.rectDiv_right.getUI(),"0px");
 	HtmlUtil.setTop(this.rectDiv_right.getUI(),(Math.round(h/2)-Math.round(this.rectDiv_right.h/2))+"px");
 	
-	this.rectDiv_bottom = new RectZone(this,RectZone.BOTTOM,50,10);
+	this.rectDiv_bottom = new RectZone(this,Constants.RectZone_BOTTOM,50,10);
 	HtmlUtil.setLeft(this.rectDiv_bottom.getUI(),(Math.round(w/2)-Math.round(this.rectDiv_bottom.w/2))+"px");
 	HtmlUtil.setBottom(this.rectDiv_bottom.getUI(),"0px");
 
@@ -80,12 +80,7 @@ function NodeListener(node){
 	var mouseOffset;
 	var container = node.container;
 	var containerPosition = container.getPosition();
-	//log.info(containerPosition.x+" : "+containerPosition.y);
-
-
-	function onClick(e){
-		
-		
+	function onClick(e){	
 		e.stopPropagation();
 	}
 
@@ -142,8 +137,6 @@ function NodeListener(node){
 			var lineOffset = pline.endPosOffset;
 			pline.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
-		
-
 		e.stopPropagation();
 	}
 
@@ -197,7 +190,3 @@ function NodeListener(node){
 	$(node.getUI()).bind('mouseout',onMouseOut);
 	$(node.getUI()).bind('click',onClick);
 }
-
-
-
-

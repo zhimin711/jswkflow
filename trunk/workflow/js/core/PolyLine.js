@@ -1,18 +1,12 @@
 function PolyLine(container){
 	Line.call(this,container);
 	this.componentType = Constants.COMPONENT_TYPE_POLYLINE;
-	this.controller;
-
+	this.controller;//中间的控制点
 	this.ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
 	this.arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
-	
 	this.middlePos;
 	this.direction;
 
-	this.getUI = function(){
-		return this.ui;
-	}
-	
 	this.setFrom = function(x,y){
 		this.fromPos = x + "," + y;
 		this.getUI().points.value = this.fromPos + " " + this.middlePos +" "+ this.toPos;
@@ -63,8 +57,6 @@ function PolyLine(container){
 
 PolyLine.prototype = Line.prototype; 
 
-
-
 function PolyLineController(container,pline,w,h){
 	this.pline = pline;
 	this.w = w;
@@ -80,16 +72,11 @@ function PolyLineController(container,pline,w,h){
 	HtmlUtil.setWidth(this.getUI(),this.w);
 	HtmlUtil.setHeight(this.getUI(),this.h);
 	
-	
-	
-
 	this.getPosition = function(){
 		return HtmlUtil.getCoords(this.getUI());
 	}
 
 	new PolyLineControllerListener(this);
-
-	
 }
 
 
@@ -98,7 +85,6 @@ function PolyLineControllerListener(controller){
 	var container = controller.container;
 	var containerPosition = container.getPosition();
 
-	
 	function onMouseMove(e){
 		e  = e || window.event;
 		var mousePos = HtmlUtil.mouseCoords(e);	
