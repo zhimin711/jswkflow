@@ -14,3 +14,9 @@ Constants.POLYLINE_MOD = 3;
 Constants.COMPONENT_TYPE_NODE = 4;
 Constants.COMPONENT_TYPE_LINE = 5;
 Constants.COMPONENT_TYPE_POLYLINE = 6;
+
+/**node rect zone**/
+Constants.RectZone_TOP = 1;
+Constants.RectZone_RIGHT = 2;
+Constants.RectZone_BOTTOM = 3;
+Constants.RectZone_LEFT = 4;
