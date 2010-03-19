@@ -7,7 +7,6 @@ function Container(){
 
 	var ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;"></div>');
 	//var canvas = HtmlUtil.newElement('<v:group style="position:absolute;left:0;top:0;z-index:11;width:600px;height:600px;" coordsize="600,600"></v:group>');
-
 	//HtmlUtil.append(ui,canvas);
 	
 	this.getUI = function(){

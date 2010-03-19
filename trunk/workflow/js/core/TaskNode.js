@@ -2,10 +2,10 @@ function TaskNode(w,h,container){
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
 
-	var ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
+	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
 
-	HtmlUtil.setWidth(ui,w);
-	HtmlUtil.setHeight(ui,h);
+	HtmlUtil.setWidth(this.getUI(),w);
+	HtmlUtil.setHeight(this.getUI(),h);
 
 	this.rectDiv_top = new RectZone(this,Constants.RectZone_TOP,50,10);
 	HtmlUtil.setLeft(this.rectDiv_top.getUI(),(Math.round(w/2)-Math.round(this.rectDiv_top.w/2))+"px");
@@ -24,18 +24,10 @@ function TaskNode(w,h,container){
 	HtmlUtil.setBottom(this.rectDiv_bottom.getUI(),"0px");
 
 
-	HtmlUtil.append(ui,this.rectDiv_top.getUI());
-	HtmlUtil.append(ui,this.rectDiv_left.getUI());
-	HtmlUtil.append(ui,this.rectDiv_right.getUI());
-	HtmlUtil.append(ui,this.rectDiv_bottom.getUI());
-	
-	this.getUI = function(){
-		return ui;
-	}
-
-	this.getPosition = function(){
-		return HtmlUtil.getCoords(this.getUI());
-	}
+	HtmlUtil.append(this.getUI(),this.rectDiv_top.getUI());
+	HtmlUtil.append(this.getUI(),this.rectDiv_left.getUI());
+	HtmlUtil.append(this.getUI(),this.rectDiv_right.getUI());
+	HtmlUtil.append(this.getUI(),this.rectDiv_bottom.getUI());
 
 	new NodeListener(this);
 
@@ -43,7 +35,6 @@ function TaskNode(w,h,container){
 	this.beginLine = [];
 	//指向这个节点的线的集合
 	this.endLine = [];
-
 	this.beginPolyLine = [];
 	this.endPolyLine = [];
 
@@ -75,14 +66,12 @@ function TaskNode(w,h,container){
 		}
 	}
 }
+TaskNode.prototype = UIComponent.prototype;
 
 function NodeListener(node){
 	var mouseOffset;
 	var container = node.container;
 	var containerPosition = container.getPosition();
-	function onClick(e){	
-		e.stopPropagation();
-	}
 
 	function onMouseOver(e){
 		HtmlUtil.show(node.rectDiv_top.getUI());
@@ -188,5 +177,4 @@ function NodeListener(node){
 	$(node.getUI()).bind('mousedown',onMouseDown);
 	$(node.getUI()).bind('mouseover',onMouseOver);
 	$(node.getUI()).bind('mouseout',onMouseOut);
-	$(node.getUI()).bind('click',onClick);
 }

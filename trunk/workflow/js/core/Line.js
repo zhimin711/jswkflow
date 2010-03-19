@@ -49,9 +49,8 @@ function Line(container){
 	new LineListener(this);
 
 }
-Line.prototype.getUI = function(){
-	return this.ui;
-}
+Line.prototype = UIComponent.prototype;
+
 Line.prototype.setFrom = function(x,y){
 	this.fromPos = {x:parseInt(x,10),y:parseInt(y,10)};
 	this.getUI().from = x + ',' + y;	

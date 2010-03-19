@@ -1,5 +1,4 @@
 function Constants(){}
-
 /***line**/
 Constants.DIRECTION_LT = 1;//left top
 Constants.DIRECTION_RT = 2;//right top

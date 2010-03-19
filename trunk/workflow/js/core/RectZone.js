@@ -3,20 +3,11 @@ function RectZone(node,type,w,h){
 	this.type = type;
 	this.w = w;
 	this.h= h;
-
-	var ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="rect-zone" style="position:absolute;z-index:6;display:none;"></div>');
-	HtmlUtil.setWidth(ui,this.w);
-	HtmlUtil.setHeight(ui,this.h);
-	this.getUI = function(){
-		return ui;
-	}
-
-	this.getPosition = function(){
-		return HtmlUtil.getCoords(this.getUI());
-	}
+	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="rect-zone" style="position:absolute;z-index:6;display:none;"></div>');
+	HtmlUtil.setWidth(this.getUI(),this.w);
+	HtmlUtil.setHeight(this.getUI(),this.h);
 
 	this.getEdgePos = function(mousePos,container){
-		//log.info("宽："+HtmlUtil.getWidth(this.getUI()))
 		var borderWidth = 1;
 		var containerPos = container.getPosition();
 		var recPos = this.getPosition();
@@ -61,33 +52,30 @@ function RectZone(node,type,w,h){
 
 	this.getMiddlePoints = function(fromPos,toPos){
 		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){//top和bottom热区
-			return  {x:fromPos.x,y:toPos.y};//中间点x不变，y由toPos定
+			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};//中间点x不变，y由toPos定
 		}else{//left right 热区
-			return  {x:toPos.x,y:fromPos.y};//中间点y不变，x由fromPos定
+			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};//中间点y不变，x由fromPos定
 		}
 	}
 	new RectZoneListener(this);
 }
+RectZone.prototype = UIComponent.prototype;
 
 function RectZoneListener(rect){
 	var container = rect.node.container;
 
 	function onMouseOver(e){
-		//log.info("when mouse over is drawing "+container.startDraw);
 		if(!container.startDraw){
 			container.fromNode = rect;
 		}else{
-			//log.info("set to node....");
 			container.toNode = rect;
 		}
 	}
 
 	function onMouseOut(e){
-		log.info("node mouse over is drawing ...."+container.startDraw);
 		if(!container.startDraw){
 			container.fromNode = null;
 		}else{
-			
 			container.toNode = null;
 		}
 	}
