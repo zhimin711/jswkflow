@@ -59,6 +59,17 @@ function TaskNode(w,h,container,id){
 			var line = this.endPolyLine[i];
 			this.container.deleteComponent(line);
 		}
+		//从beforeNode的nextNode里删除自己
+		for(var i =0,j=this.beforeNode.length;i<j;i++){
+			var tmp = this.beforeNode[i];
+			tmp.nextNode.removeObj(this);
+		}
+		//从nextNode的beforeNode里删除自己
+		for(var i =0,j=this.nextNode.length;i<j;i++){
+			var tmp = this.nextNode[i];
+			tmp.beforeNode.removeObj(this);
+		}
+		
 	}
 	
 	this.canAddLine = function(fromNode){
@@ -93,11 +104,9 @@ function TaskNode(w,h,container,id){
 }
 TaskNode.prototype =  new UIComponent();
 TaskNode.prototype.showController = function(){
-	log.error("show node")
 	HtmlUtil.addClass(this.getUI(),"node-selected");
 }
 TaskNode.prototype.hideController = function(){
-	log.error("hide node")
 	HtmlUtil.removeClass(this.getUI(),"node-selected");
 }
 

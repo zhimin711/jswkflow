@@ -78,7 +78,16 @@ Line.prototype.hideController = function(){
 }
 // 删除UI
 Line.prototype.removeUI = function(){
+	log.error(this.beginNode)
 	HtmlUtil.remove(this.getUI());
+	//将beginNode上的beginLine里的自己删除
+	if(this.beginNode){
+		this.beginNode.beginLine.removeObj(this);
+	}
+	//将endNode上的endLine里的自己删除
+	if(this.endNode){
+		this.endNode.endLine.removeObj(this);
+	}
 }
 Line.prototype.finishLine = function(){
 	//给线画上箭头，加上控制点

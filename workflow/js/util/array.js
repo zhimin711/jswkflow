@@ -12,10 +12,12 @@ Array.prototype.removeByIndex = function (index) {
     this.splice(index,1);
 };
 
-Array.prototype.remove = function(obj){
+Array.prototype.removeObj = function(obj){
 	var index = this.indexOf(obj);
-	this.splice(index,1);
-}
+	if (index != -1){
+		this.splice(index,1);
+	}
+};
 
 Array.prototype.size = function () {
     return this.length;
