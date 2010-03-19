@@ -102,8 +102,12 @@ HtmlUtil.hide = function(el){
 HtmlUtil.remove = function(el){
 	$(el).remove();
 }
-
-
+HtmlUtil.addClass = function(el,style){
+	$(el).addClass(style);
+}
+HtmlUtil.removeClass = function(el,style){
+	$(el).removeClass(style);
+}
 
 
 /*
