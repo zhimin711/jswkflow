@@ -78,15 +78,19 @@ Line.prototype.hideController = function(){
 }
 // 删除UI
 Line.prototype.removeUI = function(){
-	log.error(this.beginNode)
+	//log.error(this.beginNode)
 	HtmlUtil.remove(this.getUI());
 	//将beginNode上的beginLine里的自己删除
 	if(this.beginNode){
 		this.beginNode.beginLine.removeObj(this);
+		//从beforeNode的nextNode里删除line.endNode
+		this.beginNode.nextNode.removeObj(this.endNode);
 	}
 	//将endNode上的endLine里的自己删除
 	if(this.endNode){
 		this.endNode.endLine.removeObj(this);
+		//从endNode的beforeNode里删除line.beginNode
+		this.endNode.beforeNode.removeObj(this.beginNode);
 	}
 }
 Line.prototype.finishLine = function(){
