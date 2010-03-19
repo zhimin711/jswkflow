@@ -44,13 +44,14 @@ function Container(){
 		component.removeUI();
 		switch(component.componentType){
 			case Constants.COMPONENT_TYPE_LINE:
-				this.lines.remove(component);
+		
+				this.lines.removeObj(component);
 				break;
 			case Constants.COMPONENT_TYPE_NODE:
-				this.nodes.remove(component);
+				this.nodes.removeObj(component);
 				break;
 			case Constants.COMPONENT_TYPE_POLYLINE:
-				this.polyLines.remove(component);
+				this.polyLines.removeObj(component);
 				break;
 		}
 		component = null;
