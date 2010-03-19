@@ -42,7 +42,6 @@ function RectZone(node,type,w,h){
 	}
 
 	this.addBeginPolyLine = function(polyline){
-		log.error("add polyline")
 		this.node.beginPolyLine.push(polyline);
 	}
 
