@@ -65,19 +65,12 @@ function PolyLineController(container,pline,w,h){
 	
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="rect-zone" style="position:absolute;z-index:12;"></div>');
 
-	this.getUI = function(){
-		return this.ui;
-	}
-
 	HtmlUtil.setWidth(this.getUI(),this.w);
 	HtmlUtil.setHeight(this.getUI(),this.h);
-	
-	this.getPosition = function(){
-		return HtmlUtil.getCoords(this.getUI());
-	}
 
 	new PolyLineControllerListener(this);
 }
+PolyLineController.prototype = UIComponent.prototype;
 
 
 function PolyLineControllerListener(controller){
