@@ -8,12 +8,14 @@ Array.prototype.indexOf = function (obj) {
     return -1;
 };
 
-
-
 Array.prototype.removeByIndex = function (index) {
     this.splice(index,1);
 };
 
+Array.prototype.remove = function(obj){
+	var index = this.indexOf(obj);
+	this.splice(index,1);
+}
 
 Array.prototype.size = function () {
     return this.length;

@@ -1,4 +1,5 @@
-function Line(container){
+function Line(container,id){
+	this.id = id;
 	this.componentType = Constants.COMPONENT_TYPE_LINE;
 	this.container = container;
 	this.ui = HtmlUtil.newElement('<v:line style="position:absolute;z-index:11;"></v:line>');
@@ -11,13 +12,15 @@ function Line(container){
 	this.beginController;
 	this.endController;
 
+	this.beginNode;
+	this.endNode;
+
 	//begin和endcontroller 设置,根据方向来计算begin和endcontroller的top和left(相对line而不是相对container)
 	this.setControllerPosition = function(){
 		if(!this.beginController || !this.endController){
 			return;
 		}
 		var direction = Line._getDirection(this.getFrom(),this.getTo());
-		log.error(direction)
 		switch(direction){
 			case Constants.DIRECTION_LT:
 				HtmlUtil.setLeft(this.endController.getUI(),0+"px");
@@ -49,7 +52,7 @@ function Line(container){
 	new LineListener(this);
 
 }
-Line.prototype = UIComponent.prototype;
+Line.prototype = new UIComponent();
 
 Line.prototype.setFrom = function(x,y){
 	this.fromPos = {x:parseInt(x,10),y:parseInt(y,10)};
@@ -124,10 +127,10 @@ function LineController(container,line,w,h){
 
 function LineListener(line){
     var onClick = function(e){
-		//将container上所有选中的取消选中
 		line.container.unSelectAll();
 		line.container.currentSelectedComponent = line;
 		line.showController();
+		e.stopPropagation();
 	} 
 	$(line.getUI()).bind('click',onClick);
 }

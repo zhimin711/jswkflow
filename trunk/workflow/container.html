@@ -29,6 +29,8 @@
 		background:blue;
 	}
 
+	
+
 	div.workflow-node{
 		background-color: #ECE9D8;
 		border-left: #ffeeff 1px solid;
@@ -37,6 +39,10 @@
 		border-bottom: #ACA899 1px solid;
 		width:100px;
 		height:30px;
+	}
+
+	div.node-selected{
+		background:gray;
 	}
 
 	div.workflow-container{
@@ -62,6 +68,57 @@
 	 function removeComponent(){
 		container.deleteComponent(container.currentSelectedComponent);
 	 }
+
+	 function outputContainer(){
+		var nodes = container.nodes
+		var lines = container.lines;
+		var polyLines = container.polyLines;
+
+		var htmlArr = [];
+
+		for(var i =0,j=nodes.length;i<j;i++){
+			var node = nodes[i];
+			htmlArr.push("<li>node id:"+node.id);
+			htmlArr.push("<ul>");
+			for(var x =0,y=node.beginLine.length;x<y;x++){
+				var line = node.beginLine[x];
+				htmlArr.push("<li>beginLine id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.endLine.length;x<y;x++){
+				var line = node.endLine[x];
+				htmlArr.push("<li>endline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.beginPolyLine.length;x<y;x++){
+				var line = node.beginPolyLine[x];
+				htmlArr.push("<li>beforePolyline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.endPolyLine.length;x<y;x++){
+				var line = node.endPolyLine[x];
+				htmlArr.push("<li>endPolyline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.beforeNode.length;x<y;x++){
+				var tmp = node.beforeNode[x];
+				htmlArr.push("<li>before node id:"+tmp.id + "</li>");
+			}
+			for(var x =0,y=node.nextNode.length;x<y;x++){
+				var tmp = node.nextNode[x];
+				htmlArr.push("<li>next node id:"+tmp.id + "</li>");
+			}
+			htmlArr.push("</ul></li>");
+	
+		}
+		htmlArr.push("<br/>")
+		for(var i =0,j=lines.length;i<j;i++){
+			var line = lines[i];
+			htmlArr.push("<li>line id:"+ line.id+" from ("+line.fromPos.x+" ,"+line.fromPos.y+") to ("+line.toPos.x+" ,"+line.toPos.y+") beginNode: "+line.beginNode.id+" endNode: "+line.endNode.id+"</li>");
+		}
+		htmlArr.push("<br/>")
+		for(var i =0,j=polyLines.length;i<j;i++){
+			var polyLine = polyLines[i];
+			htmlArr.push("<li>polyline: id:"+ polyLine.id+" from ("+polyLine.fromPos.x+" ,"+polyLine.fromPos.y+") to ("+polyLine.toPos.x+" ,"+polyLine.toPos.y+")  beginNode: "+polyLine.beginNode.id+" endNode: "+polyLine.endNode.id+"</li>");
+		}
+		$("#containerLog").html(htmlArr.join(''));
+	 }	
   //-->
   </SCRIPT>
  </HEAD>
@@ -89,5 +146,9 @@
 	<input type="button" onclick="changeMod(Constants.POLYLINE_MOD)" value="ÕÛÏß"/>
 	<input type="button" onclick="removeComponent()" value="É¾³ý"/>
 	<input type="button" onclick="clearLog()" value="clearLog"/>
+	<input type="button" onclick="outputContainer()" value="containerLog"/>
+
+	<ul id ="containerLog">
+	</ul>
  </BODY>
 </html>

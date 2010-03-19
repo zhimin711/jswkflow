@@ -1,5 +1,5 @@
-function PolyLine(container){
-	Line.call(this,container);
+function PolyLine(container,id){
+	Line.call(this,container,id);
 	this.componentType = Constants.COMPONENT_TYPE_POLYLINE;
 	this.controller;//中间的控制点
 	this.ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
@@ -39,7 +39,6 @@ function PolyLine(container){
 
 	this.addController = function(container){
 		this.controller = new PolyLineController(container,this,5,5);
-		//log.error("add controller...."+this.getMiddle().x)
 		HtmlUtil.setLeft(this.controller.getUI(),this.getMiddle().x-Math.round(this.controller.w/2)+"px");
 		HtmlUtil.setTop(this.controller.getUI(),this.getMiddle().y-Math.round(this.controller.h/2)+"px");
 		HtmlUtil.after(this.getUI(),this.controller.getUI());
@@ -55,7 +54,7 @@ function PolyLine(container){
 	new LineListener(this);
 }
 
-PolyLine.prototype = Line.prototype; 
+PolyLine.prototype = new Line(); 
 
 function PolyLineController(container,pline,w,h){
 	this.pline = pline;
@@ -70,7 +69,7 @@ function PolyLineController(container,pline,w,h){
 
 	new PolyLineControllerListener(this);
 }
-PolyLineController.prototype = UIComponent.prototype;
+PolyLineController.prototype = new UIComponent();
 
 
 function PolyLineControllerListener(controller){
@@ -94,7 +93,6 @@ function PolyLineControllerListener(controller){
 
 	function onMouseDown(e){
 		if(container.operationMode == Constants.CHOSEN_MOD){//如果是选择模式下
-			//log.info("node mouse down......"+container.operationMode)
 			$(controller.getUI()).bind('mousemove',onMouseMove);
 			$(controller.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(controller.getUI(),e);

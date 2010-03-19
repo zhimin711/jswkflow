@@ -1,8 +1,14 @@
-function TaskNode(w,h,container){
+function TaskNode(w,h,container,id){
+	this.id = id;
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
-
-	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
+	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node">'+this.id+'</div>');
+	this.beginLine = [];//从这个节点出去的线的集合
+	this.endLine = [];//指向这个节点的线的集合
+	this.beginPolyLine = [];
+	this.endPolyLine = [];
+	this.beforeNode = [];//上一个节点,可以是多个
+	this.nextNode =[];//下一个节点，可以是多个
 
 	HtmlUtil.setWidth(this.getUI(),w);
 	HtmlUtil.setHeight(this.getUI(),h);
@@ -23,25 +29,14 @@ function TaskNode(w,h,container){
 	HtmlUtil.setLeft(this.rectDiv_bottom.getUI(),(Math.round(w/2)-Math.round(this.rectDiv_bottom.w/2))+"px");
 	HtmlUtil.setBottom(this.rectDiv_bottom.getUI(),"0px");
 
-
 	HtmlUtil.append(this.getUI(),this.rectDiv_top.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_left.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_right.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_bottom.getUI());
 
-	new NodeListener(this);
-
-	//从这个节点出去的线的集合
-	this.beginLine = [];
-	//指向这个节点的线的集合
-	this.endLine = [];
-	this.beginPolyLine = [];
-	this.endPolyLine = [];
-
 	// 删除UI 每个component都得有 node line polyline
 	this.removeUI = function(){
-		//节点本身删除
-		HtmlUtil.remove(this.getUI());
+		HtmlUtil.remove(this.getUI());//节点本身删除
 		//删除节点上的热区
 		this.rectDiv_top = null;
 		this.rectDiv_left = null;
@@ -65,14 +60,58 @@ function TaskNode(w,h,container){
 			this.container.deleteComponent(line);
 		}
 	}
+	
+	this.canAddLine = function(fromNode){
+		//如果beforeNode里已经有fromNode了，就不添加，return false
+		if(this.addBeforeNode(fromNode)){
+			//同时把fromnode的nextnode指向自己
+			fromNode.addNextNode(this);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	this.addBeforeNode =function(node){
+		if(this.beforeNode.indexOf(node) == -1){
+			this.beforeNode.push(node);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	this.addNextNode =function(node){
+		if(this.nextNode.indexOf(node) == -1){
+			this.nextNode.push(node);
+			return true;
+		}else{
+			return false;
+		}
+	}
+	new NodeListener(this);
 }
-TaskNode.prototype = UIComponent.prototype;
+TaskNode.prototype =  new UIComponent();
+TaskNode.prototype.showController = function(){
+	log.error("show node")
+	HtmlUtil.addClass(this.getUI(),"node-selected");
+}
+TaskNode.prototype.hideController = function(){
+	log.error("hide node")
+	HtmlUtil.removeClass(this.getUI(),"node-selected");
+}
 
 function NodeListener(node){
 	var mouseOffset;
 	var container = node.container;
 	var containerPosition = container.getPosition();
-
+	function onClick(e){
+		container.unSelectAll();
+		container.currentSelectedComponent = node;
+		node.showController();
+		e.stopPropagation();
+	}
+	
 	function onMouseOver(e){
 		HtmlUtil.show(node.rectDiv_top.getUI());
 		HtmlUtil.show(node.rectDiv_left.getUI());
@@ -84,7 +123,7 @@ function NodeListener(node){
 	function onMouseOut(e){
 		HtmlUtil.hide(node.rectDiv_top.getUI());
 		HtmlUtil.hide(node.rectDiv_left.getUI());
-		HtmlUtil.hide(node.rectDiv_right.getUI());
+		HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
 		HtmlUtil.hide(node.rectDiv_bottom.getUI());
 		e.stopPropagation();
 	}
@@ -113,7 +152,6 @@ function NodeListener(node){
 			var lineOffset = line.endPosOffset;
 			line.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
-
 		//从节点延伸出去的线，更新from
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var pline = node.beginPolyLine[i];
@@ -130,11 +168,10 @@ function NodeListener(node){
 	}
 
 	function onMouseDown(e){
-		//将container上所有选中的取消选中
 		container.unSelectAll();
 		container.currentSelectedComponent = node;
+		node.showController();
 		if(container.operationMode == Constants.CHOSEN_MOD || container.operationMode == Constants.NODE_MOD){//如果是画节点模式下
-			//log.info("node mouse down......"+container.operationMode)
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(node.getUI(),e);
@@ -177,4 +214,5 @@ function NodeListener(node){
 	$(node.getUI()).bind('mousedown',onMouseDown);
 	$(node.getUI()).bind('mouseover',onMouseOver);
 	$(node.getUI()).bind('mouseout',onMouseOut);
+	$(node.getUI()).bind('click',onClick);
 }

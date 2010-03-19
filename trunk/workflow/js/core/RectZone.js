@@ -59,7 +59,7 @@ function RectZone(node,type,w,h){
 	}
 	new RectZoneListener(this);
 }
-RectZone.prototype = UIComponent.prototype;
+RectZone.prototype =  new UIComponent();
 
 function RectZoneListener(rect){
 	var container = rect.node.container;
