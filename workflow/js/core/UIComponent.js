@@ -8,3 +8,4 @@ UIComponent.prototype.getPosition = function(){
 UIComponent.prototype.getUI = function(){
 	return this.ui;
 }
+
