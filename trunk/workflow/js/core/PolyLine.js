@@ -48,7 +48,19 @@ function PolyLine(container,id){
 	this.removeUI = function(){
 		HtmlUtil.remove(this.getUI());
 		HtmlUtil.remove(this.controller.getUI());
-		this.controller=null;	
+		this.controller=null;
+		//将beginNode上的beginLine里的自己删除
+		if(this.beginNode){
+			this.beginNode.beginPolyLine.removeObj(this);
+			//从beforeNode的nextNode里删除line.endNode
+			this.beginNode.nextNode.removeObj(this.endNode);
+		}
+		//将endNode上的endLine里的自己删除
+		if(this.endNode){
+			this.endNode.endPolyLine.removeObj(this);
+			//从endNode的beforeNode里删除line.beginNode
+			this.endNode.beforeNode.removeObj(this.beginNode);
+		}
 	}
 	
 	new LineListener(this);
