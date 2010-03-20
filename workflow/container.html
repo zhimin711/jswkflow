@@ -110,12 +110,12 @@
 		htmlArr.push("<br/>")
 		for(var i =0,j=lines.length;i<j;i++){
 			var line = lines[i];
-			htmlArr.push("<li>line id:"+ line.id+" from ("+line.fromPos.x+" ,"+line.fromPos.y+") to ("+line.toPos.x+" ,"+line.toPos.y+") beginNode: "+line.beginNode.id+" endNode: "+line.endNode.id+"</li>");
+			htmlArr.push("<li>line id:"+ line.id+" from ("+line.getFrom().x+" ,"+line.getFrom().y+") to ("+line.getTo().x+" ,"+line.getTo().y+") beginNode: "+line.beginNode.id+" endNode: "+line.endNode.id+"</li>");
 		}
 		htmlArr.push("<br/>")
 		for(var i =0,j=polyLines.length;i<j;i++){
 			var polyLine = polyLines[i];
-			htmlArr.push("<li>polyline: id:"+ polyLine.id+" from ("+polyLine.fromPos.x+" ,"+polyLine.fromPos.y+") to ("+polyLine.toPos.x+" ,"+polyLine.toPos.y+")  beginNode: "+polyLine.beginNode.id+" endNode: "+polyLine.endNode.id+"</li>");
+			htmlArr.push("<li>polyline: id:"+ polyLine.id+" from ("+polyLine.getFrom().x+" ,"+polyLine.getFrom().y+") to ("+polyLine.getTo().x+" ,"+polyLine.getTo().y+")  beginNode: "+polyLine.beginNode.id+" endNode: "+polyLine.endNode.id+"</li>");
 		}
 		$("#containerLog").html(htmlArr.join(''));
 	 }	
