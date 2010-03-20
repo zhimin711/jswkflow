@@ -90,6 +90,18 @@ function ContainerListener(container){
 				container.id ++;
 				container.addNode(node,mousePos);
 				break;
+			case Constants.START_NODE_MOD:
+				
+				var node = new StartNode(100,40,container,container.id);
+				
+				container.id ++;
+				container.addNode(node,mousePos);
+				break;
+			case Constants.END_NODE_MOD:
+				var node = new EndNode(100,40,container,container.id);
+				container.id ++;
+				container.addNode(node,mousePos);
+				break;
 			case Constants.LINE_MOD:
 				break;
 		}

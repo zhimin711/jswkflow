@@ -65,9 +65,13 @@ function RectZoneListener(rect){
 
 	function onMouseOver(e){
 		if(!container.startDraw){
-			container.fromNode = rect;
+			if(rect.node.canDrag){
+				container.fromNode = rect;
+			}
 		}else{
-			container.toNode = rect;
+			if(rect.node.canDrop){
+				container.toNode = rect;
+			}
 		}
 	}
 
