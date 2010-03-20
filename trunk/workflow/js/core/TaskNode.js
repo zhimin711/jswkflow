@@ -9,7 +9,8 @@ function TaskNode(w,h,container,id){
 	this.endPolyLine = [];
 	this.beforeNode = [];//上一个节点,可以是多个
 	this.nextNode =[];//下一个节点，可以是多个
-
+	this.canDrag = true;
+	this.canDrop = true;
 	HtmlUtil.setWidth(this.getUI(),w);
 	HtmlUtil.setHeight(this.getUI(),h);
 
@@ -69,7 +70,6 @@ function TaskNode(w,h,container,id){
 			var tmp = this.nextNode[i];
 			tmp.beforeNode.removeObj(this);
 		}
-		
 	}
 	
 	this.canAddLine = function(fromNode){
@@ -77,24 +77,6 @@ function TaskNode(w,h,container,id){
 		if(this.addBeforeNode(fromNode)){
 			//同时把fromnode的nextnode指向自己
 			fromNode.addNextNode(this);
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	this.addBeforeNode =function(node){
-		if(this.beforeNode.indexOf(node) == -1){
-			this.beforeNode.push(node);
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	this.addNextNode =function(node){
-		if(this.nextNode.indexOf(node) == -1){
-			this.nextNode.push(node);
 			return true;
 		}else{
 			return false;
@@ -108,6 +90,23 @@ TaskNode.prototype.showController = function(){
 }
 TaskNode.prototype.hideController = function(){
 	HtmlUtil.removeClass(this.getUI(),"node-selected");
+}
+
+TaskNode.prototype.addBeforeNode =function(node){
+	if(this.beforeNode.indexOf(node) == -1){
+		this.beforeNode.push(node);
+		return true;
+	}else{
+		return false;
+	}
+}
+TaskNode.prototype.addNextNode =function(node){
+	if(this.nextNode.indexOf(node) == -1){
+		this.nextNode.push(node);
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function NodeListener(node){
