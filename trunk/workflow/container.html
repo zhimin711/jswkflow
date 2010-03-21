@@ -19,6 +19,8 @@
   <script type="text/javascript" src="js/core/Line.js"></script>
   <script type="text/javascript" src="js/core/PolyLine.js"></script>
   <script type="text/javascript" src="js/core/StartNode.js"></script>
+  <script type="text/javascript" src="js/core/Button.js"></script>
+  <script type="text/javascript" src="js/core/ToolBar.js"></script>
 
 
   <style>
@@ -53,6 +55,51 @@
 		left:50%;
 		margin-left:-300px;
 		overflow:auto;
+	}
+	div.workflow-toolbar{
+		width:200px;
+		height:30px;
+		border:1px solid black;
+	}
+
+	div.workflow-btn{
+		*font-size:0px;
+		width:20px;
+		height:20px;
+		background:#F0EFE2;
+		border:1px solid red;
+	}
+
+	div.pressed {
+		border-left: #9D9D92 1px solid;
+		border-top: #9D9D92 1px solid;
+		border-right: #CECEC3 1px solid;
+		border-bottom: #CECEC3 1px solid;
+	}
+
+	div.chosen{
+		background:url(img/select.gif) no-repeat 50% 50%;
+	}
+
+	div.tasknode{
+		background:url(img/node.gif) no-repeat 50% 50%;
+	}
+
+	div.line{
+		background:url(img/transition.gif) no-repeat 50% 50%;
+	}
+	
+	div.polyline{
+		background:url(img/transition.gif) no-repeat 50% 50%;
+	}
+	div.startnode{
+		background:url(img/start.gif) no-repeat 50% 50%;
+	}
+	div.endnode{
+		background:url(img/end.gif) no-repeat 50% 50%;
+	}
+	div.deletebtn{
+		background:url(img/delete.gif) no-repeat 50% 50%;
 	}
 
   </style>
@@ -135,7 +182,9 @@
 		HtmlUtil.append($("body"),container.getUI());
 		var containerPosition = container.getPosition();
 		log.info(containerPosition.x+" : "+containerPosition.y);
-
+		
+		var toolbar = new ToolBar(container);
+		HtmlUtil.append($("body"),toolbar.getUI());
 
 		var  a =[];
 
