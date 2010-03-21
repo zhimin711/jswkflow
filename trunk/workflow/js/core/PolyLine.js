@@ -104,7 +104,7 @@ function PolyLineControllerListener(controller){
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Constants.CHOSEN_MOD){//如果是选择模式下
+		if(container.operationMode == Constants.BTN_SELECT_TYPE){//如果是选择模式下
 			$(controller.getUI()).bind('mousemove',onMouseMove);
 			$(controller.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(controller.getUI(),e);

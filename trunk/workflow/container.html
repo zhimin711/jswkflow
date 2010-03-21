@@ -67,7 +67,6 @@
 		width:20px;
 		height:20px;
 		background:#F0EFE2;
-		border:1px solid red;
 	}
 
 	div.pressed {
@@ -92,6 +91,10 @@
 	div.polyline{
 		background:url(img/transition.gif) no-repeat 50% 50%;
 	}
+	div.polyline{
+		background:url(img/transition_1.gif) no-repeat 50% 50%;
+	}
+	
 	div.startnode{
 		background:url(img/start.gif) no-repeat 50% 50%;
 	}
@@ -186,12 +189,10 @@
 		var toolbar = new ToolBar(container);
 		HtmlUtil.append($("body"),toolbar.getUI());
 
-		var  a =[];
-
-		log.dir(a);
+		
 	//-->
 	</SCRIPT>
-
+   <div style="position:relative;top:50px;">
 	<input type="button" onclick="changeMod(Constants.CHOSEN_MOD)" value="选择"/>
 	<input type="button" onclick="changeMod(Constants.START_NODE_MOD)" value="起点"/>
 	<input type="button" onclick="changeMod(Constants.NODE_MOD)" value="节点"/>
@@ -201,8 +202,8 @@
 	<input type="button" onclick="removeComponent()" value="删除"/>
 	<input type="button" onclick="clearLog()" value="clearLog"/>
 	<input type="button" onclick="outputContainer()" value="containerLog"/>
-
 	<ul id ="containerLog">
 	</ul>
+	</div>
  </BODY>
 </html>
