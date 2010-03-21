@@ -22,3 +22,11 @@ Constants.RectZone_TOP = 1;
 Constants.RectZone_RIGHT = 2;
 Constants.RectZone_BOTTOM = 3;
 Constants.RectZone_LEFT = 4;
+
+Constants.BTN_SELECT_TYPE = "chosen";
+Constants.BTN_LINE_TYPE = "line";
+Constants.BTN_POLYLINE_TYPE = "polyline";
+Constants.BTN_NODE_TYPE = "tasknode";
+Constants.BTN_STARTNODE_TYPE = "startnode";
+Constants.BTN_ENDNODE_TYPE = "endnode";
+Constants.BTN_DELETE_TYPE = "deletebtn";
