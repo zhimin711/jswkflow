@@ -179,7 +179,7 @@ function NodeListener(node){
 		container.unSelectAll();
 		container.currentSelectedComponent = node;
 		node.showController();
-		if(container.operationMode == Constants.CHOSEN_MOD || container.operationMode == Constants.NODE_MOD){//如果是画节点模式下
+		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){//如果是画节点模式下
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(node.getUI(),e);

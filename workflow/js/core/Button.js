@@ -1,7 +1,7 @@
 function Button(toolbar,type){
 	this.toolbar = toolbar;
 	this.type = type;
-	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" sytle="position:absolute;"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" style="position:absolute;"></div>');
 	new ButtonListener(this);
 }
 Button.prototype = new UIComponent();

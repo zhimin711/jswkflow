@@ -1,10 +1,10 @@
 function Container(){
 	this.id = 1;
-	this.operationMode = Constants.NODE_MOD;
+	this.operationMode = Constants.BTN_NODE_TYPE;
 	this.fromNode = null;// 线从哪个热区(RectZone)开始
 	this.toNode = null;//线在哪个热区(RectZone)结束
 	this.startDraw = false;
-	this.ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;"></div>');
+	this.ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;top:40px;"></div>');
     this.lines = [];
 	this.nodes = [];
 	this.polyLines = [];
@@ -82,33 +82,31 @@ function ContainerListener(container){
 		var mousePos = HtmlUtil.mouseCoords(e);	
 		container.unSelectAll();//清空选中的组件，除了当前点击的组件外
 		switch(container.operationMode){
-			case Constants.CHOSEN_MOD:			
+			case Constants.BTN_SELECT_TYPE:			
 				break;
-			case Constants.NODE_MOD:
+			case Constants.BTN_NODE_TYPE:
 				//如果出于添加节点模式，单击后创建一个node，然后加到鼠标位置
 				var node = new TaskNode(100,40,container,container.id);
 				container.id ++;
 				container.addNode(node,mousePos);
 				break;
-			case Constants.START_NODE_MOD:
-				
+			case Constants.BTN_STARTNODE_TYPE:
 				var node = new StartNode(100,40,container,container.id);
-				
 				container.id ++;
 				container.addNode(node,mousePos);
 				break;
-			case Constants.END_NODE_MOD:
+			case Constants.BTN_ENDNODE_TYPE:
 				var node = new EndNode(100,40,container,container.id);
 				container.id ++;
 				container.addNode(node,mousePos);
 				break;
-			case Constants.LINE_MOD:
+			case Constants.BTN_LINE_TYPE:
 				break;
 		}
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Constants.LINE_MOD || container.operationMode == Constants.POLYLINE_MOD){//如果是画线模式下
+		if(container.operationMode == Constants.BTN_LINE_TYPE || container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画线模式下
 			//如果fromnode有值，说明可以开始画线
 			if(container.fromNode != null){
 				line = new Line(container,container.id);
@@ -146,7 +144,7 @@ function ContainerListener(container){
 			var toNodePos = container.toNode.node.getPosition();//结束线所在节点的绝对位置
 			var containerPos = container.getPosition();//获得container的绝对位置
 			line.endPosOffset = {x:toPos.x-(toNodePos.x-containerPos.x),y:toPos.y-(toNodePos.y-containerPos.y)};
-			if(container.operationMode == Constants.LINE_MOD){//如果是画直线模式下
+			if(container.operationMode == Constants.BTN_LINE_TYPE){//如果是画直线模式下
 				line.finishLine();
 				//将线分别赋值给连接的两端node的beginLine和endLine
 				container.fromNode.addBeginLine(line);
@@ -154,7 +152,7 @@ function ContainerListener(container){
 				line.beginNode = container.fromNode.node;
 				line.endNode = container.toNode.node;
 			}
-			if(container.operationMode == Constants.POLYLINE_MOD){//如果是画折线的模式
+			if(container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画折线的模式
 				//根据fromZone来获得from to middle的坐标
 				var middlePos = container.fromNode.getMiddlePoints(line.getFrom(),line.getTo());
 				//构造折线，将折线画在container上，
