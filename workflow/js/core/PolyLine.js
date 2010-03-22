@@ -44,21 +44,21 @@ function PolyLine(container,id){
 		HtmlUtil.after(this.getUI(),this.controller.getUI());
 	}
 
-	// 删除UI 每个component都得有 node line polyline
+	/*删除UI 每个component都得有 node line polyline*/
 	this.removeUI = function(){
 		HtmlUtil.remove(this.getUI());
 		HtmlUtil.remove(this.controller.getUI());
 		this.controller=null;
-		//将beginNode上的beginLine里的自己删除
+		/*将beginNode上的beginLine里的自己删除*/
 		if(this.beginNode){
 			this.beginNode.beginPolyLine.removeObj(this);
-			//从beforeNode的nextNode里删除line.endNode
+			/*从beforeNode的nextNode里删除line.endNode*/
 			this.beginNode.nextNode.removeObj(this.endNode);
 		}
-		//将endNode上的endLine里的自己删除
+		/*将endNode上的endLine里的自己删除*/
 		if(this.endNode){
 			this.endNode.endPolyLine.removeObj(this);
-			//从endNode的beforeNode里删除line.beginNode
+			/*从endNode的beforeNode里删除line.beginNode*/
 			this.endNode.beforeNode.removeObj(this.beginNode);
 		}
 	}
@@ -98,13 +98,13 @@ function PolyLineControllerListener(controller){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(controller.getUI(),left + 'px');
 
-		//移动的同时，更新polyline的middlePoint坐标
+		/*移动的同时，更新polyline的middlePoint坐标*/
 		controller.pline.setMiddle(left,top);
 		e.stopPropagation();
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Constants.BTN_SELECT_TYPE){//如果是选择模式下
+		if(container.operationMode == Constants.BTN_SELECT_TYPE){/*如果是选择模式下*/
 			$(controller.getUI()).bind('mousemove',onMouseMove);
 			$(controller.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(controller.getUI(),e);

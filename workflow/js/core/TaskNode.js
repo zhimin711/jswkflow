@@ -3,12 +3,12 @@ function TaskNode(w,h,container,id){
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
-	this.beginLine = [];//从这个节点出去的线的集合
-	this.endLine = [];//指向这个节点的线的集合
+	this.beginLine = [];/*从这个节点出去的线的集合*/
+	this.endLine = [];/*指向这个节点的线的集合*/
 	this.beginPolyLine = [];
 	this.endPolyLine = [];
-	this.beforeNode = [];//上一个节点,可以是多个
-	this.nextNode =[];//下一个节点，可以是多个
+	this.beforeNode = [];/*上一个节点,可以是多个*/
+	this.nextNode =[];/*下一个节点，可以是多个*/
 	this.canDrag = true;
 	this.canDrop = true;
 	HtmlUtil.setWidth(this.getUI(),w);
@@ -38,15 +38,15 @@ function TaskNode(w,h,container,id){
 	var content = new NodeContent(container.operationMode,"node"+id);
 	HtmlUtil.append(this.getUI(),content.getUI());
 
-	// 删除UI 每个component都得有 node line polyline
+	/* 删除UI 每个component都得有 node line polyline*/
 	this.removeUI = function(){
-		HtmlUtil.remove(this.getUI());//节点本身删除
-		//删除节点上的热区
+		HtmlUtil.remove(this.getUI());/*节点本身删除*/
+		/*删除节点上的热区*/
 		this.rectDiv_top = null;
 		this.rectDiv_left = null;
 		this.rectDiv_right = null;
 		this.rectDiv_bottom = null;
-		//节点上的line删除
+		/*节点上的line删除*/
 		for(var i =0,j=this.beginLine.length;i<j;i++){
 			var line = this.beginLine[i];
 			this.container.deleteComponent(line);
@@ -63,12 +63,12 @@ function TaskNode(w,h,container,id){
 			var line = this.endPolyLine[i];
 			this.container.deleteComponent(line);
 		}
-		//从beforeNode的nextNode里删除自己
+		/*从beforeNode的nextNode里删除自己*/
 		for(var i =0,j=this.beforeNode.length;i<j;i++){
 			var tmp = this.beforeNode[i];
 			tmp.nextNode.removeObj(this);
 		}
-		//从nextNode的beforeNode里删除自己
+		/*从nextNode的beforeNode里删除自己*/
 		for(var i =0,j=this.nextNode.length;i<j;i++){
 			var tmp = this.nextNode[i];
 			tmp.beforeNode.removeObj(this);
@@ -77,11 +77,11 @@ function TaskNode(w,h,container,id){
 	
 	this.canAddLine = function(fromNode){
 		if(fromNode == this){
-			return false;//不能自己连自己
+			return false;/*不能自己连自己*/
 		}
-		//如果beforeNode里已经有fromNode了，就不添加，return false
+		/*如果beforeNode里已经有fromNode了，就不添加，return false*/
 		if(this.addBeforeNode(fromNode)){
-			//同时把fromnode的nextnode指向自己
+			/*同时把fromnode的nextnode指向自己*/
 			fromNode.addNextNode(this);
 			return true;
 		}else{
@@ -127,7 +127,7 @@ function NodeListener(node){
 	}
 	
 	function onMouseOver(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画线模式下
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*如果是画线模式下*/
 			HtmlUtil.show(node.rectDiv_top.getUI());
 			HtmlUtil.show(node.rectDiv_left.getUI());
 			HtmlUtil.show(node.rectDiv_right.getUI());
@@ -138,7 +138,7 @@ function NodeListener(node){
 	}
 
 	function onMouseOut(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画线模式下
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*如果是画线模式下*/
 			HtmlUtil.hide(node.rectDiv_top.getUI());
 			HtmlUtil.hide(node.rectDiv_left.getUI());
 			HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
@@ -156,26 +156,26 @@ function NodeListener(node){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(node.getUI(),left + 'px');
 
-		//将连接在该节点上的线的起止坐标更新
-		//从节点延伸出去的线，更新from
+		/*将连接在该节点上的线的起止坐标更新
+		  从节点延伸出去的线，更新from*/
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			var lineOffset = line.beginPosOffset;
 			line.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		//连接到节点的线，更新to
+		/*连接到节点的线，更新to*/
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			var lineOffset = line.endPosOffset;
 			line.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
-		//从节点延伸出去的线，更新from
+		/*从节点延伸出去的线，更新from*/
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var pline = node.beginPolyLine[i];
 			var lineOffset = pline.beginPosOffset;
 			pline.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		//连接到节点的线，更新to
+		/*连接到节点的线，更新to*/
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var pline = node.endPolyLine[i];
 			var lineOffset = pline.endPosOffset;
@@ -188,11 +188,10 @@ function NodeListener(node){
 		container.unSelectAll();
 		container.currentSelectedComponent = node;
 		node.showController();
-		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){//如果是画节点模式下
+		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){/*如果是画节点模式下*/
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(node.getUI(),e);
-			//e.stopPropagation();
 			node.getUI().setCapture();
 		}else{
 			$(node.getUI()).unbind('mousemove',onMouseMove);
@@ -201,23 +200,23 @@ function NodeListener(node){
 	}
 
 	function onMouseUp(e){
-		//将连接在该节点上的线的起止坐标更新
-		//从节点延伸出去的直线，更新from
+		/*将连接在该节点上的线的起止坐标更新
+		  从节点延伸出去的直线，更新from*/
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			line.setControllerPosition();
 		}
-		//连接到节点的直线，更新to
+		/*连接到节点的直线，更新to*/
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			line.setControllerPosition();
 		}
-		//从节点延伸出去的折线，更新from
+		/*从节点延伸出去的折线，更新from*/
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var line = node.beginPolyLine[i];
 			line.setControllerPosition();
 		}
-		//连接到节点的折线，更新to
+		/*连接到节点的折线，更新to*/
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var line = node.endPolyLine[i];
 			line.setControllerPosition();

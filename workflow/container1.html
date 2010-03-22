@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <script type="text/javascript" src="js/util/jquery-1.4.1.js"></script>
+  <script type="text/javascript" src="js/workflowUtil.js"></script>
+  <script type="text/javascript" src="js/workflow.js"></script>
+  <style>
+		v\:*{behavior:url(#default#VML);}
+  </style>
+  <style>
+	div.rect-zone{
+		*font-size:0px;
+		background:#ECE9D8;
+		border:1px dashed  #ACA899;
+	}
+
+	div.controller-zone{
+		*font-size:0px;
+		background:#31AAF2;
+	}
+	
+
+	div.workflow-node{
+		background-color: #ECE9D8;
+		border-left: #ffeeff 1px solid;
+		border-top: #ffeeff 1px solid;
+		border-right: #ACA899 1px solid;
+		border-bottom: #ACA899 1px solid;
+		width:100px;
+		height:30px;
+	}
+
+	div.node-selected{
+		background:#CFDAEB;
+	}
+
+	div.workflow-container{
+		width:600px;
+		height:600px;
+		border-top:1px solid #D7E3FF;
+		border-bottom:1px solid #BFCAFF;
+		border-left:1px solid #D7E3FF;
+		border-right:1px solid #D7E3FF;
+		left:50%;
+		margin-left:-300px;
+		overflow:auto;
+		background-image:url(img/workbg.gif);
+	}
+	div.workflow-toolbar{
+		width:600px;
+		height:31px;
+		top:5px;
+		left:50%;
+		*left:51%;
+		margin-left:-300px;
+		border-top:1px solid #F1F5FE;
+		border-bottom:1px solid #BFCAFF;
+		border-left:1px solid #D7E3FF;
+		border-right:1px solid #D7E3FF;
+		background:transparent url(img/toolbarbg.gif) repeat-x
+	}
+
+	div.workflow-btn{
+		*font-size:0px;
+		width:20px;
+		height:20px;
+		background-color:#FFFFFF;
+	}
+
+	div.pressed {
+		border-left: #9D9D92 1px solid;
+		border-top: #9D9D92 1px solid;
+		border-right: #CECEC3 1px solid;
+		border-bottom: #CECEC3 1px solid;
+	}
+
+	div.chosen{
+		background:url(img/select.gif) no-repeat 50% 50%;
+	}
+
+	div.tasknode{
+		background:url(img/node.gif) no-repeat 50% 50%;
+	}
+
+	div.line{
+		background:url(img/transition.gif) no-repeat 50% 50%;
+	}
+	
+	div.polyline{
+		background:url(img/transition.gif) no-repeat 50% 50%;
+	}
+	div.polyline{
+		background:url(img/transition_1.gif) no-repeat 50% 50%;
+	}
+	
+	div.startnode{
+		background:url(img/start.gif) no-repeat 50% 50%;
+	}
+	div.endnode{
+		background:url(img/end.gif) no-repeat 50% 50%;
+	}
+	div.deletebtn{
+		background:url(img/delete.gif) no-repeat 50% 50%;
+	}
+
+	.workflow-node table{
+		width:75%;
+		height:100%;
+		margin-left:10px;
+
+	}
+
+  </style>
+  <SCRIPT LANGUAGE="JavaScript">
+  <!--
+	 function changeMod(type){
+		container.operationMode = type;
+	 }
+
+	 function clearLog(){
+		log.clear();
+	 }
+
+	 function removeComponent(){
+		container.deleteComponent(container.currentSelectedComponent);
+	 }
+
+	 function outputContainer(){
+		var nodes = container.nodes
+		var lines = container.lines;
+		var polyLines = container.polyLines;
+
+		var htmlArr = [];
+
+		for(var i =0,j=nodes.length;i<j;i++){
+			var node = nodes[i];
+			htmlArr.push("<li>node id:"+node.id);
+			htmlArr.push("<ul>");
+			for(var x =0,y=node.beginLine.length;x<y;x++){
+				var line = node.beginLine[x];
+				htmlArr.push("<li>beginLine id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.endLine.length;x<y;x++){
+				var line = node.endLine[x];
+				htmlArr.push("<li>endline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.beginPolyLine.length;x<y;x++){
+				var line = node.beginPolyLine[x];
+				htmlArr.push("<li>beforePolyline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.endPolyLine.length;x<y;x++){
+				var line = node.endPolyLine[x];
+				htmlArr.push("<li>endPolyline id:"+line.id + "</li>");
+			}
+			for(var x =0,y=node.beforeNode.length;x<y;x++){
+				var tmp = node.beforeNode[x];
+				htmlArr.push("<li>before node id:"+tmp.id + "</li>");
+			}
+			for(var x =0,y=node.nextNode.length;x<y;x++){
+				var tmp = node.nextNode[x];
+				htmlArr.push("<li>next node id:"+tmp.id + "</li>");
+			}
+			htmlArr.push("</ul></li>");
+	
+		}
+		htmlArr.push("<br/>")
+		for(var i =0,j=lines.length;i<j;i++){
+			var line = lines[i];
+			htmlArr.push("<li>line id:"+ line.id+" from ("+line.getFrom().x+" ,"+line.getFrom().y+") to ("+line.getTo().x+" ,"+line.getTo().y+") beginNode: "+line.beginNode.id+" endNode: "+line.endNode.id+"</li>");
+		}
+		htmlArr.push("<br/>")
+		for(var i =0,j=polyLines.length;i<j;i++){
+			var polyLine = polyLines[i];
+			htmlArr.push("<li>polyline: id:"+ polyLine.id+" from ("+polyLine.getFrom().x+" ,"+polyLine.getFrom().y+") to ("+polyLine.getTo().x+" ,"+polyLine.getTo().y+")  beginNode: "+polyLine.beginNode.id+" endNode: "+polyLine.endNode.id+"</li>");
+		}
+		$("#containerLog").html(htmlArr.join(''));
+	 }	
+  //-->
+  </SCRIPT>
+ </HEAD>
+
+ <BODY>
+	
+	<SCRIPT LANGUAGE="JavaScript">
+	<!--
+		//var log = new Logger("");
+		//var node = new TaskNode(100,40);
+		//HtmlUtil.append($("body"),node.getUI());
+		var container = new Container();
+		HtmlUtil.append($("body"),container.getUI());
+		var containerPosition = container.getPosition();
+//		log.info(containerPosition.x+" : "+containerPosition.y);
+		
+		var toolbar = new ToolBar(container);
+		HtmlUtil.append($("body"),toolbar.getUI());
+
+		
+	//-->
+	</SCRIPT>
+	<!--
+   <div style="position:relative;top:50px;">
+	<input type="button" onclick="changeMod(Constants.CHOSEN_MOD)" value="选择"/>
+	<input type="button" onclick="changeMod(Constants.START_NODE_MOD)" value="起点"/>
+	<input type="button" onclick="changeMod(Constants.NODE_MOD)" value="节点"/>
+	<input type="button" onclick="changeMod(Constants.END_NODE_MOD)" value="终点"/>
+	<input type="button" onclick="changeMod(Constants.LINE_MOD)" value="直线"/>
+	<input type="button" onclick="changeMod(Constants.POLYLINE_MOD)" value="折线"/>
+	<input type="button" onclick="removeComponent()" value="删除"/>
+	<input type="button" onclick="clearLog()" value="clearLog"/>
+	-->
+	<input type="button" onclick="outputContainer()" value="containerLog"/>
+	<ul id ="containerLog">
+	</ul>
+	<hr>
+	</div>
+
+
+
+</DIV>
+
+
+
+ </BODY>
+</html>
