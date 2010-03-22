@@ -3,12 +3,12 @@ function TaskNode(w,h,container,id){
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
-	this.beginLine = [];/*´ÓÕâ¸ö½Úµã³öÈ¥µÄÏßµÄ¼¯ºÏ*/
-	this.endLine = [];/*Ö¸ÏòÕâ¸ö½ÚµãµÄÏßµÄ¼¯ºÏ*/
+	this.beginLine = [];//ä»è¿™ä¸ªèŠ‚ç‚¹å‡ºå»çš„çº¿çš„é›†åˆ
+	this.endLine = [];//æŒ‡å‘è¿™ä¸ªèŠ‚ç‚¹çš„çº¿çš„é›†åˆ
 	this.beginPolyLine = [];
 	this.endPolyLine = [];
-	this.beforeNode = [];/*ÉÏÒ»¸ö½Úµã,¿ÉÒÔÊÇ¶à¸ö*/
-	this.nextNode =[];/*ÏÂÒ»¸ö½Úµã£¬¿ÉÒÔÊÇ¶à¸ö*/
+	this.beforeNode = [];//ä¸Šä¸€ä¸ªèŠ‚ç‚¹,å¯ä»¥æ˜¯å¤šä¸ª
+	this.nextNode =[];//ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œå¯ä»¥æ˜¯å¤šä¸ª
 	this.canDrag = true;
 	this.canDrop = true;
 	HtmlUtil.setWidth(this.getUI(),w);
@@ -38,15 +38,15 @@ function TaskNode(w,h,container,id){
 	var content = new NodeContent(container.operationMode,"node"+id);
 	HtmlUtil.append(this.getUI(),content.getUI());
 
-	/* É¾³ıUI Ã¿¸öcomponent¶¼µÃÓĞ node line polyline*/
+	//åˆ é™¤UI æ¯ä¸ªcomponentéƒ½å¾—æœ‰ node line polyline
 	this.removeUI = function(){
-		HtmlUtil.remove(this.getUI());/*½Úµã±¾ÉíÉ¾³ı*/
-		/*É¾³ı½ÚµãÉÏµÄÈÈÇø*/
+		HtmlUtil.remove(this.getUI());//èŠ‚ç‚¹æœ¬èº«åˆ é™¤
+		//åˆ é™¤èŠ‚ç‚¹ä¸Šçš„çƒ­åŒº
 		this.rectDiv_top = null;
 		this.rectDiv_left = null;
 		this.rectDiv_right = null;
 		this.rectDiv_bottom = null;
-		/*½ÚµãÉÏµÄlineÉ¾³ı*/
+		//èŠ‚ç‚¹ä¸Šçš„lineåˆ é™¤
 		for(var i =0,j=this.beginLine.length;i<j;i++){
 			var line = this.beginLine[i];
 			this.container.deleteComponent(line);
@@ -63,12 +63,12 @@ function TaskNode(w,h,container,id){
 			var line = this.endPolyLine[i];
 			this.container.deleteComponent(line);
 		}
-		/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ı×Ô¼º*/
+		//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤è‡ªå·±
 		for(var i =0,j=this.beforeNode.length;i<j;i++){
 			var tmp = this.beforeNode[i];
 			tmp.nextNode.removeObj(this);
 		}
-		/*´ÓnextNodeµÄbeforeNodeÀïÉ¾³ı×Ô¼º*/
+		//ä»nextNodeçš„beforeNodeé‡Œåˆ é™¤è‡ªå·±
 		for(var i =0,j=this.nextNode.length;i<j;i++){
 			var tmp = this.nextNode[i];
 			tmp.beforeNode.removeObj(this);
@@ -77,11 +77,11 @@ function TaskNode(w,h,container,id){
 	
 	this.canAddLine = function(fromNode){
 		if(fromNode == this){
-			return false;/*²»ÄÜ×Ô¼ºÁ¬×Ô¼º*/
+			return false;//ä¸èƒ½è‡ªå·±è¿è‡ªå·±
 		}
-		/*Èç¹ûbeforeNodeÀïÒÑ¾­ÓĞfromNodeÁË£¬¾Í²»Ìí¼Ó£¬return false*/
+		//å¦‚æœbeforeNodeé‡Œå·²ç»æœ‰fromNodeäº†ï¼Œå°±ä¸æ·»åŠ ï¼Œreturn false
 		if(this.addBeforeNode(fromNode)){
-			/*Í¬Ê±°ÑfromnodeµÄnextnodeÖ¸Ïò×Ô¼º*/
+			//åŒæ—¶æŠŠfromnodeçš„nextnodeæŒ‡å‘è‡ªå·±
 			fromNode.addNextNode(this);
 			return true;
 		}else{
@@ -127,7 +127,7 @@ function NodeListener(node){
 	}
 	
 	function onMouseOver(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*Èç¹ûÊÇ»­ÏßÄ£Ê½ÏÂ*/
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//å¦‚æœæ˜¯ç”»çº¿æ¨¡å¼ä¸‹
 			HtmlUtil.show(node.rectDiv_top.getUI());
 			HtmlUtil.show(node.rectDiv_left.getUI());
 			HtmlUtil.show(node.rectDiv_right.getUI());
@@ -138,7 +138,7 @@ function NodeListener(node){
 	}
 
 	function onMouseOut(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*Èç¹ûÊÇ»­ÏßÄ£Ê½ÏÂ*/
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//å¦‚æœæ˜¯ç”»çº¿æ¨¡å¼ä¸‹
 			HtmlUtil.hide(node.rectDiv_top.getUI());
 			HtmlUtil.hide(node.rectDiv_left.getUI());
 			HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
@@ -156,26 +156,26 @@ function NodeListener(node){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(node.getUI(),left + 'px');
 
-		/*½«Á¬½ÓÔÚ¸Ã½ÚµãÉÏµÄÏßµÄÆğÖ¹×ø±ê¸üĞÂ
-		  ´Ó½ÚµãÑÓÉì³öÈ¥µÄÏß£¬¸üĞÂfrom*/
+		//å°†è¿æ¥åœ¨è¯¥èŠ‚ç‚¹ä¸Šçš„çº¿çš„èµ·æ­¢åæ ‡æ›´æ–°
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			var lineOffset = line.beginPosOffset;
 			line.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*Á¬½Óµ½½ÚµãµÄÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			var lineOffset = line.endPosOffset;
 			line.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*´Ó½ÚµãÑÓÉì³öÈ¥µÄÏß£¬¸üĞÂfrom*/
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var pline = node.beginPolyLine[i];
 			var lineOffset = pline.beginPosOffset;
 			pline.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*Á¬½Óµ½½ÚµãµÄÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var pline = node.endPolyLine[i];
 			var lineOffset = pline.endPosOffset;
@@ -188,7 +188,7 @@ function NodeListener(node){
 		container.unSelectAll();
 		container.currentSelectedComponent = node;
 		node.showController();
-		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){/*Èç¹ûÊÇ»­½ÚµãÄ£Ê½ÏÂ*/
+		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){//å¦‚æœæ˜¯ç”»èŠ‚ç‚¹æ¨¡å¼ä¸‹
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(node.getUI(),e);
@@ -200,23 +200,23 @@ function NodeListener(node){
 	}
 
 	function onMouseUp(e){
-		/*½«Á¬½ÓÔÚ¸Ã½ÚµãÉÏµÄÏßµÄÆğÖ¹×ø±ê¸üĞÂ
-		  ´Ó½ÚµãÑÓÉì³öÈ¥µÄÖ±Ïß£¬¸üĞÂfrom*/
+		//å°†è¿æ¥åœ¨è¯¥èŠ‚ç‚¹ä¸Šçš„çº¿çš„èµ·æ­¢åæ ‡æ›´æ–°
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„ç›´çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			line.setControllerPosition();
 		}
-		/*Á¬½Óµ½½ÚµãµÄÖ±Ïß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„ç›´çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			line.setControllerPosition();
 		}
-		/*´Ó½ÚµãÑÓÉì³öÈ¥µÄÕÛÏß£¬¸üĞÂfrom*/
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„æŠ˜çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var line = node.beginPolyLine[i];
 			line.setControllerPosition();
 		}
-		/*Á¬½Óµ½½ÚµãµÄÕÛÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„æŠ˜çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var line = node.endPolyLine[i];
 			line.setControllerPosition();

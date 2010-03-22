@@ -50,11 +50,11 @@ function RectZone(node,type,w,h){
 	}
 
 	this.getMiddlePoints = function(fromPos,toPos){
-		/*topºÍbottomÈÈÇø*/
+		//å¦‚æœæ˜¯topå’Œbottomçƒ­åŒº
 		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){
-			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};/*ÖĞ¼äµãx²»±ä£¬yÓÉtoPos¶¨*/
-		}else{/*left right ÈÈÇø*/
-			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};/*ÖĞ¼äµãy²»±ä£¬xÓÉfromPos¶¨*/
+			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};//ä¸­é—´ç‚¹xä¸å˜ï¼Œyç”±toPoså®š
+		}else{//left right çƒ­åŒº
+			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};//ä¸­é—´ç‚¹yä¸å˜ï¼Œxç”±fromPoså®š
 		}
 	}
 	new RectZoneListener(this);
