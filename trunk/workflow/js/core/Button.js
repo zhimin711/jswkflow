@@ -21,7 +21,7 @@ function ButtonListener(button){
 	var onClick = function(e){
 		button.toolbar.setPressed(button.type);
 		button.setPressed();
-	}
+	};
 
 	$(button.getUI()).bind("click",onClick);
 }
@@ -38,13 +38,13 @@ DeleteButton.prototype = Button.prototype;
 function DelButtonListener(button){
 	var onMouseDown = function(e){
 		button.setPressed();
-	}
+	};
 
 	var onMouseUp = function(e){
 		button.cancelPressed();
 		var container = button.toolbar.container;
 		container.deleteComponent(container.currentSelectedComponent);
-	}
+	};
 	
 	$(button.getUI()).bind("mousedown",onMouseDown);
 	$(button.getUI()).bind("mouseup",onMouseUp);

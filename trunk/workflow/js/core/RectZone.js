@@ -50,10 +50,11 @@ function RectZone(node,type,w,h){
 	}
 
 	this.getMiddlePoints = function(fromPos,toPos){
-		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){//top和bottom热区
-			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};//中间点x不变，y由toPos定
-		}else{//left right 热区
-			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};//中间点y不变，x由fromPos定
+		/*top和bottom热区*/
+		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){
+			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};/*中间点x不变，y由toPos定*/
+		}else{/*left right 热区*/
+			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};/*中间点y不变，x由fromPos定*/
 		}
 	}
 	new RectZoneListener(this);
