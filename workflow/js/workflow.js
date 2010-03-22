@@ -58,29 +58,29 @@ function TaskNode(w,h,container,id){
 		this.rectDiv_bottom = null;
 		//节点上的line删除
 		for(var i =0,j=this.beginLine.length;i<j;i++){
-			var line = this.beginLine[i];
+			var line = this.beginLine[0];
 			this.container.deleteComponent(line);
 		}
 		for(var i =0,j=this.endLine.length;i<j;i++){
-			var line = this.endLine[i];
+			var line = this.endLine[0];
 			this.container.deleteComponent(line);
 		}
 		for(var i =0,j=this.beginPolyLine.length;i<j;i++){
-			var line = this.beginPolyLine[i];
+			var line = this.beginPolyLine[0];
 			this.container.deleteComponent(line);
 		}
 		for(var i =0,j=this.endPolyLine.length;i<j;i++){
-			var line = this.endPolyLine[i];
+			var line = this.endPolyLine[0];
 			this.container.deleteComponent(line);
 		}
 		//从beforeNode的nextNode里删除自己
 		for(var i =0,j=this.beforeNode.length;i<j;i++){
-			var tmp = this.beforeNode[i];
+			var tmp = this.beforeNode[0];
 			tmp.nextNode.removeObj(this);
 		}
 		//从nextNode的beforeNode里删除自己
 		for(var i =0,j=this.nextNode.length;i<j;i++){
-			var tmp = this.nextNode[i];
+			var tmp = this.nextNode[0];
 			tmp.beforeNode.removeObj(this);
 		}
 	}
