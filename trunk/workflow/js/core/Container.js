@@ -4,7 +4,7 @@ function Container(){
 	this.fromNode = null;// 线从哪个热区(RectZone)开始
 	this.toNode = null;//线在哪个热区(RectZone)结束
 	this.startDraw = false;
-	this.ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;top:40px;"></div>');
+	this.ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;top:35px;"></div>');
     this.lines = [];
 	this.nodes = [];
 	this.polyLines = [];
