@@ -829,7 +829,7 @@ EndNode.prototype =  TaskNode.prototype;
 function Button(toolbar,type){
 	this.toolbar = toolbar;
 	this.type = type;
-	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" style="position:absolute;"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" style="position:absolute;" title="'+type+'"></div>');
 	new ButtonListener(this);
 }
 Button.prototype = new UIComponent();
@@ -857,7 +857,7 @@ function ButtonListener(button){
 function DeleteButton(toolbar){
 	this.toolbar = toolbar;
 	this.type = Constants.BTN_DELETE_TYPE;
-	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ this.type +'" style="position:absolute;"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ this.type +'" style="position:absolute;" title="'+this.type+'"></div>');
 	new DelButtonListener(this);
 
 }
@@ -893,34 +893,37 @@ function ToolBar(container){
 	btn_line.setLeft("27px");
 	btns.push(btn_line);
 
-	var btn_polyline = new Button(this,Constants.BTN_POLYLINE_TYPE);
-	btn_polyline.setTop("5px");
-	btn_polyline.setLeft("52px");
-	btns.push(btn_polyline);
+	
 
 	var btn_node = new Button(this,Constants.BTN_NODE_TYPE);
 	btn_node.setTop("5px");
-	btn_node.setLeft("77px");
+	btn_node.setLeft("52px");
 	btns.push(btn_node);
 
 	var btn_startnode = new Button(this,Constants.BTN_STARTNODE_TYPE);
 	btn_startnode.setTop("5px");
-	btn_startnode.setLeft("102px");
+	btn_startnode.setLeft("77px");
 	btns.push(btn_startnode);
 
 	var btn_endnode = new Button(this,Constants.BTN_ENDNODE_TYPE);
 	btn_endnode.setTop("5px");
-	btn_endnode.setLeft("127px");
+	btn_endnode.setLeft("102px");
 	btns.push(btn_endnode);
 
 	var btn_delete = new DeleteButton(this);
 	btn_delete.setTop("5px");
-	btn_delete.setLeft("152px");
+	btn_delete.setLeft("127px");
 	btns.push(btn_delete);
 
+/*
+	var btn_polyline = new Button(this,Constants.BTN_POLYLINE_TYPE);
+	btn_polyline.setTop("5px");
+	btn_polyline.setLeft("152px");
+	btns.push(btn_polyline);
+*/
 	HtmlUtil.append(this.getUI(),btn_select.getUI());
 	HtmlUtil.append(this.getUI(),btn_line.getUI());
-	HtmlUtil.append(this.getUI(),btn_polyline.getUI());
+	//HtmlUtil.append(this.getUI(),btn_polyline.getUI());
 	HtmlUtil.append(this.getUI(),btn_node.getUI());
 	HtmlUtil.append(this.getUI(),btn_startnode.getUI());
 	HtmlUtil.append(this.getUI(),btn_endnode.getUI());
