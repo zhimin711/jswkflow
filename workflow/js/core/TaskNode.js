@@ -2,7 +2,7 @@ function TaskNode(w,h,container,id){
 	this.id = id;
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
-	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node">'+this.id+'</div>');
+	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
 	this.beginLine = [];//从这个节点出去的线的集合
 	this.endLine = [];//指向这个节点的线的集合
 	this.beginPolyLine = [];
@@ -34,6 +34,9 @@ function TaskNode(w,h,container,id){
 	HtmlUtil.append(this.getUI(),this.rectDiv_left.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_right.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_bottom.getUI());
+
+	var content = new NodeContent(container.operationMode,id);
+	HtmlUtil.append(this.getUI(),content.getUI());
 
 	// 删除UI 每个component都得有 node line polyline
 	this.removeUI = function(){
@@ -73,6 +76,9 @@ function TaskNode(w,h,container,id){
 	}
 	
 	this.canAddLine = function(fromNode){
+		if(fromNode == this){
+			return false;//不能自己连自己
+		}
 		//如果beforeNode里已经有fromNode了，就不添加，return false
 		if(this.addBeforeNode(fromNode)){
 			//同时把fromnode的nextnode指向自己
@@ -121,18 +127,23 @@ function NodeListener(node){
 	}
 	
 	function onMouseOver(e){
-		HtmlUtil.show(node.rectDiv_top.getUI());
-		HtmlUtil.show(node.rectDiv_left.getUI());
-		HtmlUtil.show(node.rectDiv_right.getUI());
-		HtmlUtil.show(node.rectDiv_bottom.getUI());
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画线模式下
+			HtmlUtil.show(node.rectDiv_top.getUI());
+			HtmlUtil.show(node.rectDiv_left.getUI());
+			HtmlUtil.show(node.rectDiv_right.getUI());
+			HtmlUtil.show(node.rectDiv_bottom.getUI());
+		}
 		e.stopPropagation();
+
 	}
 
 	function onMouseOut(e){
-		HtmlUtil.hide(node.rectDiv_top.getUI());
-		HtmlUtil.hide(node.rectDiv_left.getUI());
-		HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
-		HtmlUtil.hide(node.rectDiv_bottom.getUI());
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//如果是画线模式下
+			HtmlUtil.hide(node.rectDiv_top.getUI());
+			HtmlUtil.hide(node.rectDiv_left.getUI());
+			HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
+			HtmlUtil.hide(node.rectDiv_bottom.getUI());
+		}
 		e.stopPropagation();
 	}
 
@@ -155,8 +166,6 @@ function NodeListener(node){
 		//连接到节点的线，更新to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
-			//log.dir(line.endPosOffset)
-			//log.info(left+":"+top);
 			var lineOffset = line.endPosOffset;
 			line.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
@@ -224,3 +233,30 @@ function NodeListener(node){
 	$(node.getUI()).bind('mouseout',onMouseOut);
 	$(node.getUI()).bind('click',onClick);
 }
+
+
+
+function NodeContent(type,content){
+	this.ui = HtmlUtil.newElement('<table  cellspacing=0 cellpadding=0  border=0>'+
+									'<tr class="title">'+
+										'<td align=middle valign="middle">'+
+											'<div class="'+type+'" style="width:16px;height:16px;margin-right:5px"></div>'+
+										'</td>'+
+										'<td class=txt align=middle valign="middle">'+content+'</td>'+
+									'</tr>'+
+								'</table>');
+}
+NodeContent.prototype = new UIComponent();
+
+
+
+
+
+
+
+
+
+
+
+
+

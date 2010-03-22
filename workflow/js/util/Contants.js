@@ -5,14 +5,6 @@ Constants.DIRECTION_RT = 2;//right top
 Constants.DIRECTION_LB = 3;//left bottom
 Constants.DIRECTION_RB = 4;//right bottom
 
-/**container**/
-Constants.CHOSEN_MOD = 0;
-Constants.NODE_MOD = 1;
-Constants.LINE_MOD = 2;
-Constants.POLYLINE_MOD = 3;
-Constants.START_NODE_MOD = 4;
-Constants.END_NODE_MOD = 5;
-
 Constants.COMPONENT_TYPE_NODE = 4;
 Constants.COMPONENT_TYPE_LINE = 5;
 Constants.COMPONENT_TYPE_POLYLINE = 6;

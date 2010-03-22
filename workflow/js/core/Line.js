@@ -78,7 +78,6 @@ Line.prototype.hideController = function(){
 }
 // 删除UI
 Line.prototype.removeUI = function(){
-	//log.error(this.beginNode)
 	HtmlUtil.remove(this.getUI());
 	//将beginNode上的beginLine里的自己删除
 	if(this.beginNode){
@@ -125,7 +124,7 @@ function LineController(container,line,w,h){
 	this.h= h;
 	this.container = container;
 
-	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="rect-zone" style="position:absolute;z-index:12;display:none;"></div>');
+	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="controller-zone" style="position:absolute;z-index:12;display:none;"></div>');
 	this.getUI = function(){
 		return this.ui;
 	}

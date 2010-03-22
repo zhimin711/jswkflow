@@ -1,5 +1,6 @@
 function ToolBar(container){
 	this.ui = HtmlUtil.newElement('<div class="workflow-toolbar" style="position:absolute;top:5px;left:40%"></div>');
+	this.container = container;
 	var btns = [];
 
 	var btn_select = new Button(this,Constants.BTN_SELECT_TYPE);
@@ -32,7 +33,7 @@ function ToolBar(container){
 	btn_endnode.setLeft("125px");
 	btns.push(btn_endnode);
 
-	var btn_delete = new Button(this,Constants.BTN_DELETE_TYPE);
+	var btn_delete = new DeleteButton(this);
 	btn_delete.setTop("0px");
 	btn_delete.setLeft("150px");
 	btns.push(btn_delete);
@@ -43,9 +44,15 @@ function ToolBar(container){
 	HtmlUtil.append(this.getUI(),btn_node.getUI());
 	HtmlUtil.append(this.getUI(),btn_startnode.getUI());
 	HtmlUtil.append(this.getUI(),btn_endnode.getUI());
+	HtmlUtil.append(this.getUI(),btn_delete.getUI());
 
 	this.setPressed = function(type){
-		container.operationMode = type;
+		this.container.operationMode = type;
+		if(this.container.operationMode == Constants.BTN_POLYLINE_TYPE || this.container.operationMode == Constants.BTN_LINE_TYPE){
+			$(this.container.getUI()).get(0).style.cursor = "crosshair";
+		}else{
+			$(this.container.getUI()).get(0).style.cursor = "default";
+		}
 		for(var i =0,j=btns.length;i<j;i++){
 			btns[i].cancelPressed();
 		}

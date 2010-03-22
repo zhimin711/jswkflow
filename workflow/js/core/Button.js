@@ -25,3 +25,27 @@ function ButtonListener(button){
 
 	$(button.getUI()).bind("click",onClick);
 }
+
+function DeleteButton(toolbar){
+	this.toolbar = toolbar;
+	this.type = Constants.BTN_DELETE_TYPE;
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ this.type +'" style="position:absolute;"></div>');
+	new DelButtonListener(this);
+
+}
+DeleteButton.prototype = Button.prototype;
+
+function DelButtonListener(button){
+	var onMouseDown = function(e){
+		button.setPressed();
+	}
+
+	var onMouseUp = function(e){
+		button.cancelPressed();
+		var container = button.toolbar.container;
+		container.deleteComponent(container.currentSelectedComponent);
+	}
+	
+	$(button.getUI()).bind("mousedown",onMouseDown);
+	$(button.getUI()).bind("mouseup",onMouseUp);
+}

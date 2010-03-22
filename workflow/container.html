@@ -29,9 +29,14 @@
   <style>
 	div.rect-zone{
 		*font-size:0px;
-		background:blue;
+		background:#ECE9D8;
+		border:1px dashed  #ACA899;
 	}
 
+	div.controller-zone{
+		*font-size:0px;
+		background:#31AAF2;
+	}
 	
 
 	div.workflow-node{
@@ -45,7 +50,7 @@
 	}
 
 	div.node-selected{
-		background:gray;
+		background:#CFDAEB;
 	}
 
 	div.workflow-container{
@@ -103,6 +108,13 @@
 	}
 	div.deletebtn{
 		background:url(img/delete.gif) no-repeat 50% 50%;
+	}
+
+	.workflow-node table{
+		width:75%;
+		height:100%;
+		margin-left:10px;
+
 	}
 
   </style>
@@ -178,13 +190,13 @@
 	
 	<SCRIPT LANGUAGE="JavaScript">
 	<!--
-		var log = new Logger("");
+		//var log = new Logger("");
 		//var node = new TaskNode(100,40);
 		//HtmlUtil.append($("body"),node.getUI());
 		var container = new Container();
 		HtmlUtil.append($("body"),container.getUI());
 		var containerPosition = container.getPosition();
-		log.info(containerPosition.x+" : "+containerPosition.y);
+//		log.info(containerPosition.x+" : "+containerPosition.y);
 		
 		var toolbar = new ToolBar(container);
 		HtmlUtil.append($("body"),toolbar.getUI());
@@ -204,6 +216,14 @@
 	<input type="button" onclick="outputContainer()" value="containerLog"/>
 	<ul id ="containerLog">
 	</ul>
+	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	</div>
+
+
+
+</DIV>
+
+
+
  </BODY>
 </html>
