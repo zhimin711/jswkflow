@@ -1,41 +1,41 @@
 function ToolBar(container){
-	this.ui = HtmlUtil.newElement('<div class="workflow-toolbar" style="position:absolute;top:5px;left:40%"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-toolbar" style="position:absolute;"></div>');
 	this.container = container;
 	var btns = [];
 
 	var btn_select = new Button(this,Constants.BTN_SELECT_TYPE);
-	btn_select.setTop("0px");
-	btn_select.setLeft("0px");
+	btn_select.setTop("5px");
+	btn_select.setLeft("2px");
 	btns.push(btn_select);
 
 	var btn_line = new Button(this,Constants.BTN_LINE_TYPE);
-	btn_line.setTop("0px");
-	btn_line.setLeft("25px");
+	btn_line.setTop("5px");
+	btn_line.setLeft("27px");
 	btns.push(btn_line);
 
 	var btn_polyline = new Button(this,Constants.BTN_POLYLINE_TYPE);
-	btn_polyline.setTop("0px");
-	btn_polyline.setLeft("50px");
+	btn_polyline.setTop("5px");
+	btn_polyline.setLeft("52px");
 	btns.push(btn_polyline);
 
 	var btn_node = new Button(this,Constants.BTN_NODE_TYPE);
-	btn_node.setTop("0px");
-	btn_node.setLeft("75px");
+	btn_node.setTop("5px");
+	btn_node.setLeft("77px");
 	btns.push(btn_node);
 
 	var btn_startnode = new Button(this,Constants.BTN_STARTNODE_TYPE);
-	btn_startnode.setTop("0px");
-	btn_startnode.setLeft("100px");
+	btn_startnode.setTop("5px");
+	btn_startnode.setLeft("102px");
 	btns.push(btn_startnode);
 
 	var btn_endnode = new Button(this,Constants.BTN_ENDNODE_TYPE);
-	btn_endnode.setTop("0px");
-	btn_endnode.setLeft("125px");
+	btn_endnode.setTop("5px");
+	btn_endnode.setLeft("127px");
 	btns.push(btn_endnode);
 
 	var btn_delete = new DeleteButton(this);
-	btn_delete.setTop("0px");
-	btn_delete.setLeft("150px");
+	btn_delete.setTop("5px");
+	btn_delete.setLeft("152px");
 	btns.push(btn_delete);
 
 	HtmlUtil.append(this.getUI(),btn_select.getUI());

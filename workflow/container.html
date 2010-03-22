@@ -56,22 +56,34 @@
 	div.workflow-container{
 		width:600px;
 		height:600px;
-		border:1px solid black;
+		border-top:1px solid #D7E3FF;
+		border-bottom:1px solid #BFCAFF;
+		border-left:1px solid #D7E3FF;
+		border-right:1px solid #D7E3FF;
 		left:50%;
 		margin-left:-300px;
 		overflow:auto;
+		background-image:url(img/workbg.gif);
 	}
 	div.workflow-toolbar{
-		width:200px;
-		height:30px;
-		border:1px solid black;
+		width:600px;
+		height:31px;
+		top:5px;
+		left:50%;
+		*left:51%;
+		margin-left:-300px;
+		border-top:1px solid #F1F5FE;
+		border-bottom:1px solid #BFCAFF;
+		border-left:1px solid #D7E3FF;
+		border-right:1px solid #D7E3FF;
+		background:transparent url(img/toolbarbg.gif) repeat-x
 	}
 
 	div.workflow-btn{
 		*font-size:0px;
 		width:20px;
 		height:20px;
-		background:#F0EFE2;
+		background-color:#FFFFFF;
 	}
 
 	div.pressed {
@@ -204,6 +216,7 @@
 		
 	//-->
 	</SCRIPT>
+	<!--
    <div style="position:relative;top:50px;">
 	<input type="button" onclick="changeMod(Constants.CHOSEN_MOD)" value="选择"/>
 	<input type="button" onclick="changeMod(Constants.START_NODE_MOD)" value="起点"/>
@@ -213,6 +226,7 @@
 	<input type="button" onclick="changeMod(Constants.POLYLINE_MOD)" value="折线"/>
 	<input type="button" onclick="removeComponent()" value="删除"/>
 	<input type="button" onclick="clearLog()" value="clearLog"/>
+	-->
 	<input type="button" onclick="outputContainer()" value="containerLog"/>
 	<ul id ="containerLog">
 	</ul>

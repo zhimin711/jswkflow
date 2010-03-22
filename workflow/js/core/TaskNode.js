@@ -35,7 +35,7 @@ function TaskNode(w,h,container,id){
 	HtmlUtil.append(this.getUI(),this.rectDiv_right.getUI());
 	HtmlUtil.append(this.getUI(),this.rectDiv_bottom.getUI());
 
-	var content = new NodeContent(container.operationMode,id);
+	var content = new NodeContent(container.operationMode,"node"+id);
 	HtmlUtil.append(this.getUI(),content.getUI());
 
 	// 删除UI 每个component都得有 node line polyline
@@ -239,7 +239,7 @@ function NodeListener(node){
 function NodeContent(type,content){
 	this.ui = HtmlUtil.newElement('<table  cellspacing=0 cellpadding=0  border=0>'+
 									'<tr class="title">'+
-										'<td align=middle valign="middle">'+
+										'<td align=middle valign="middle" width="20%">'+
 											'<div class="'+type+'" style="width:16px;height:16px;margin-right:5px"></div>'+
 										'</td>'+
 										'<td class=txt align=middle valign="middle">'+content+'</td>'+
