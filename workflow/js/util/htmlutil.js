@@ -108,22 +108,3 @@ HtmlUtil.addClass = function(el,style){
 HtmlUtil.removeClass = function(el,style){
 	$(el).removeClass(style);
 }
-
-
-/*
-HtmlUtil.getPosition = function(el) {
-		var offTop = this._element.offsetTop;
-		var offLeft = this._element.offsetLeft;
-		var el = this._element;
-		
-		if(el.getBoundingClientRect) return el.getBoundingClientRect();
-		
-		while (el = el.offsetParent) {
-			offTop += el.offsetTop;
-			offLeft += el.offsetLeft;
-		}
-		return {
-			top: offTop,
-			left: offLeft
-		};
-	}*/
