@@ -4,17 +4,17 @@ function Line(container,id){
 	this.container = container;
 	this.ui = HtmlUtil.newElement('<v:line style="position:absolute;z-index:11;"></v:line>');
 	this.arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
-	/*Ïß·ÖÁ½¶Ë£¬begin¶ËºÍend¶Ë£¬ÕâÀïµÄÁ½¸öÊôĞÔÓÃÀ´¼ÇÂ¼ÏßµÄÕâÁ½¶ËÔÚ¸÷×ÔµÄnodeÉÏµÄÆ«ÒÆÁ¿£¬ÓÃÓÚµ±nodeÍÏ×§Ê±ÖØĞÂ¶¨ÒåÏßµÄÎ»ÖÃ*/
+	//çº¿åˆ†ä¸¤ç«¯ï¼Œbeginç«¯å’Œendç«¯ï¼Œè¿™é‡Œçš„ä¸¤ä¸ªå±æ€§ç”¨æ¥è®°å½•çº¿çš„è¿™ä¸¤ç«¯åœ¨å„è‡ªçš„nodeä¸Šçš„åç§»é‡ï¼Œç”¨äºå½“nodeæ‹–æ‹½æ—¶é‡æ–°å®šä¹‰çº¿çš„ä½ç½®
 	this.beginPosOffset;
 	this.endPosOffset;
-	this.fromPos;/*×¢Òâ£¬ÊÇÏà¶ÔÓÚcontainerµÄ×ø±ê*/
-	this.toPos;/*×¢Òâ£¬ÊÇÏà¶ÔÓÚcontainerµÄ×ø±ê*/
+	this.fromPos;//æ³¨æ„ï¼Œæ˜¯ç›¸å¯¹äºcontainerçš„åæ ‡
+	this.toPos;//æ³¨æ„ï¼Œæ˜¯ç›¸å¯¹äºcontainerçš„åæ ‡
 	this.beginController;
 	this.endController;
 	this.beginNode;
 	this.endNode;
 
-	/*beginºÍendcontroller ÉèÖÃ,¸ù¾İ·½ÏòÀ´¼ÆËãbeginºÍendcontrollerµÄtopºÍleft(Ïà¶Ôline¶ø²»ÊÇÏà¶Ôcontainer)*/
+	//beginå’Œendcontroller è®¾ç½®,æ ¹æ®æ–¹å‘æ¥è®¡ç®—beginå’Œendcontrollerçš„topå’Œleft(ç›¸å¯¹lineè€Œä¸æ˜¯ç›¸å¯¹container)
 	this.setControllerPosition = function(){
 		if(!this.beginController || !this.endController){
 			return;
@@ -75,24 +75,24 @@ Line.prototype.hideController = function(){
 	HtmlUtil.hide(this.beginController.getUI());
 	HtmlUtil.hide(this.endController.getUI());
 }
-/* É¾³ıUI*/
+//åˆ é™¤UI
 Line.prototype.removeUI = function(){
 	HtmlUtil.remove(this.getUI());
-	/*½«beginNodeÉÏµÄbeginLineÀïµÄ×Ô¼ºÉ¾³ı*/
+	//å°†beginNodeä¸Šçš„beginLineé‡Œçš„è‡ªå·±åˆ é™¤
 	if(this.beginNode){
 		this.beginNode.beginLine.removeObj(this);
-		/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ıline.endNode*/
+		//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤line.endNode
 		this.beginNode.nextNode.removeObj(this.endNode);
 	}
-	/*½«endNodeÉÏµÄendLineÀïµÄ×Ô¼ºÉ¾³ı*/
+    //å°†endNodeä¸Šçš„endLineé‡Œçš„è‡ªå·±åˆ é™¤
 	if(this.endNode){
 		this.endNode.endLine.removeObj(this);
-		/*´ÓendNodeµÄbeforeNodeÀïÉ¾³ıline.beginNode*/
+		//ä»endNodeçš„beforeNodeé‡Œåˆ é™¤line.beginNode
 		this.endNode.beforeNode.removeObj(this.beginNode);
 	}
 }
 Line.prototype.finishLine = function(){
-	/*¸øÏß»­ÉÏ¼ıÍ·£¬¼ÓÉÏ¿ØÖÆµã*/
+	//ç»™çº¿ç”»ä¸Šç®­å¤´ï¼ŒåŠ ä¸Šæ§åˆ¶ç‚¹
 	HtmlUtil.append(this.getUI(),this.arrow);
 	this.beginController = new LineController(this.container,this,5,5);
 	this.endController = new LineController(this.container,this,5,5);

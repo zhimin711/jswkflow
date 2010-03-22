@@ -1,7 +1,7 @@
 function PolyLine(container,id){
 	Line.call(this,container,id);
 	this.componentType = Constants.COMPONENT_TYPE_POLYLINE;
-	this.controller;//ÖĞ¼äµÄ¿ØÖÆµã
+	this.controller;//ä¸­é—´çš„æ§åˆ¶ç‚¹
 	this.ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
 	this.arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
 	this.middlePos;
@@ -44,21 +44,21 @@ function PolyLine(container,id){
 		HtmlUtil.after(this.getUI(),this.controller.getUI());
 	}
 
-	/*É¾³ıUI Ã¿¸öcomponent¶¼µÃÓĞ node line polyline*/
+	//åˆ é™¤UI æ¯ä¸ªcomponentéƒ½å¾—æœ‰ node line polyline
 	this.removeUI = function(){
 		HtmlUtil.remove(this.getUI());
 		HtmlUtil.remove(this.controller.getUI());
 		this.controller=null;
-		/*½«beginNodeÉÏµÄbeginLineÀïµÄ×Ô¼ºÉ¾³ı*/
+		//å°†beginNodeä¸Šçš„beginLineé‡Œçš„è‡ªå·±åˆ é™¤
 		if(this.beginNode){
 			this.beginNode.beginPolyLine.removeObj(this);
-			/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ıline.endNode*/
+			//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤line.endNode
 			this.beginNode.nextNode.removeObj(this.endNode);
 		}
-		/*½«endNodeÉÏµÄendLineÀïµÄ×Ô¼ºÉ¾³ı*/
+		//å°†endNodeä¸Šçš„endLineé‡Œçš„è‡ªå·±åˆ é™¤
 		if(this.endNode){
 			this.endNode.endPolyLine.removeObj(this);
-			/*´ÓendNodeµÄbeforeNodeÀïÉ¾³ıline.beginNode*/
+			//ä»endNodeçš„beforeNodeé‡Œåˆ é™¤line.beginNode
 			this.endNode.beforeNode.removeObj(this.beginNode);
 		}
 	}
@@ -98,13 +98,13 @@ function PolyLineControllerListener(controller){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(controller.getUI(),left + 'px');
 
-		/*ÒÆ¶¯µÄÍ¬Ê±£¬¸üĞÂpolylineµÄmiddlePoint×ø±ê*/
+		//ç§»åŠ¨çš„åŒæ—¶ï¼Œæ›´æ–°polylineçš„middlePointåæ ‡
 		controller.pline.setMiddle(left,top);
 		e.stopPropagation();
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Constants.BTN_SELECT_TYPE){/*Èç¹ûÊÇÑ¡ÔñÄ£Ê½ÏÂ*/
+		if(container.operationMode == Constants.BTN_SELECT_TYPE){//å¦‚æœæ˜¯é€‰æ‹©æ¨¡å¼ä¸‹
 			$(controller.getUI()).bind('mousemove',onMouseMove);
 			$(controller.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(controller.getUI(),e);
