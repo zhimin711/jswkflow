@@ -8,18 +8,17 @@ UIComponent.prototype.getPosition = function(){
 UIComponent.prototype.getUI = function(){
 	return this.ui;
 };
-
 function TaskNode(w,h,container,id){
 	this.id = id;
 	this.container = container;
 	this.componentType = Constants.COMPONENT_TYPE_NODE;
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" style="position:absolute;z-index:5;" class="workflow-node"></div>');
-	this.beginLine = [];/*´ÓÕâ¸ö½Úµã³öÈ¥µÄÏßµÄ¼¯ºÏ*/
-	this.endLine = [];/*Ö¸ÏòÕâ¸ö½ÚµãµÄÏßµÄ¼¯ºÏ*/
+	this.beginLine = [];//ä»è¿™ä¸ªèŠ‚ç‚¹å‡ºå»çš„çº¿çš„é›†åˆ
+	this.endLine = [];//æŒ‡å‘è¿™ä¸ªèŠ‚ç‚¹çš„çº¿çš„é›†åˆ
 	this.beginPolyLine = [];
 	this.endPolyLine = [];
-	this.beforeNode = [];/*ÉÏÒ»¸ö½Úµã,¿ÉÒÔÊÇ¶à¸ö*/
-	this.nextNode =[];/*ÏÂÒ»¸ö½Úµã£¬¿ÉÒÔÊÇ¶à¸ö*/
+	this.beforeNode = [];//ä¸Šä¸€ä¸ªèŠ‚ç‚¹,å¯ä»¥æ˜¯å¤šä¸ª
+	this.nextNode =[];//ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œå¯ä»¥æ˜¯å¤šä¸ª
 	this.canDrag = true;
 	this.canDrop = true;
 	HtmlUtil.setWidth(this.getUI(),w);
@@ -49,15 +48,15 @@ function TaskNode(w,h,container,id){
 	var content = new NodeContent(container.operationMode,"node"+id);
 	HtmlUtil.append(this.getUI(),content.getUI());
 
-	/* É¾³ıUI Ã¿¸öcomponent¶¼µÃÓĞ node line polyline*/
+	//åˆ é™¤UI æ¯ä¸ªcomponentéƒ½å¾—æœ‰ node line polyline
 	this.removeUI = function(){
-		HtmlUtil.remove(this.getUI());/*½Úµã±¾ÉíÉ¾³ı*/
-		/*É¾³ı½ÚµãÉÏµÄÈÈÇø*/
+		HtmlUtil.remove(this.getUI());//èŠ‚ç‚¹æœ¬èº«åˆ é™¤
+		//åˆ é™¤èŠ‚ç‚¹ä¸Šçš„çƒ­åŒº
 		this.rectDiv_top = null;
 		this.rectDiv_left = null;
 		this.rectDiv_right = null;
 		this.rectDiv_bottom = null;
-		/*½ÚµãÉÏµÄlineÉ¾³ı*/
+		//èŠ‚ç‚¹ä¸Šçš„lineåˆ é™¤
 		for(var i =0,j=this.beginLine.length;i<j;i++){
 			var line = this.beginLine[i];
 			this.container.deleteComponent(line);
@@ -74,12 +73,12 @@ function TaskNode(w,h,container,id){
 			var line = this.endPolyLine[i];
 			this.container.deleteComponent(line);
 		}
-		/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ı×Ô¼º*/
+		//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤è‡ªå·±
 		for(var i =0,j=this.beforeNode.length;i<j;i++){
 			var tmp = this.beforeNode[i];
 			tmp.nextNode.removeObj(this);
 		}
-		/*´ÓnextNodeµÄbeforeNodeÀïÉ¾³ı×Ô¼º*/
+		//ä»nextNodeçš„beforeNodeé‡Œåˆ é™¤è‡ªå·±
 		for(var i =0,j=this.nextNode.length;i<j;i++){
 			var tmp = this.nextNode[i];
 			tmp.beforeNode.removeObj(this);
@@ -88,11 +87,11 @@ function TaskNode(w,h,container,id){
 	
 	this.canAddLine = function(fromNode){
 		if(fromNode == this){
-			return false;/*²»ÄÜ×Ô¼ºÁ¬×Ô¼º*/
+			return false;//ä¸èƒ½è‡ªå·±è¿è‡ªå·±
 		}
-		/*Èç¹ûbeforeNodeÀïÒÑ¾­ÓĞfromNodeÁË£¬¾Í²»Ìí¼Ó£¬return false*/
+		//å¦‚æœbeforeNodeé‡Œå·²ç»æœ‰fromNodeäº†ï¼Œå°±ä¸æ·»åŠ ï¼Œreturn false
 		if(this.addBeforeNode(fromNode)){
-			/*Í¬Ê±°ÑfromnodeµÄnextnodeÖ¸Ïò×Ô¼º*/
+			//åŒæ—¶æŠŠfromnodeçš„nextnodeæŒ‡å‘è‡ªå·±
 			fromNode.addNextNode(this);
 			return true;
 		}else{
@@ -138,7 +137,7 @@ function NodeListener(node){
 	}
 	
 	function onMouseOver(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*Èç¹ûÊÇ»­ÏßÄ£Ê½ÏÂ*/
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//å¦‚æœæ˜¯ç”»çº¿æ¨¡å¼ä¸‹
 			HtmlUtil.show(node.rectDiv_top.getUI());
 			HtmlUtil.show(node.rectDiv_left.getUI());
 			HtmlUtil.show(node.rectDiv_right.getUI());
@@ -149,7 +148,7 @@ function NodeListener(node){
 	}
 
 	function onMouseOut(e){
-		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){/*Èç¹ûÊÇ»­ÏßÄ£Ê½ÏÂ*/
+		if(node.container.operationMode == Constants.BTN_LINE_TYPE || node.container.operationMode == Constants.BTN_POLYLINE_TYPE){//å¦‚æœæ˜¯ç”»çº¿æ¨¡å¼ä¸‹
 			HtmlUtil.hide(node.rectDiv_top.getUI());
 			HtmlUtil.hide(node.rectDiv_left.getUI());
 			HtmlUtil.hide(node.rectDiv_right.getUI());e.stopPropagation();
@@ -167,26 +166,26 @@ function NodeListener(node){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(node.getUI(),left + 'px');
 
-		/*½«Á¬½ÓÔÚ¸Ã½ÚµãÉÏµÄÏßµÄÆğÖ¹×ø±ê¸üĞÂ
-		  ´Ó½ÚµãÑÓÉì³öÈ¥µÄÏß£¬¸üĞÂfrom*/
+		//å°†è¿æ¥åœ¨è¯¥èŠ‚ç‚¹ä¸Šçš„çº¿çš„èµ·æ­¢åæ ‡æ›´æ–°
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			var lineOffset = line.beginPosOffset;
 			line.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*Á¬½Óµ½½ÚµãµÄÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			var lineOffset = line.endPosOffset;
 			line.setTo(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*´Ó½ÚµãÑÓÉì³öÈ¥µÄÏß£¬¸üĞÂfrom*/
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var pline = node.beginPolyLine[i];
 			var lineOffset = pline.beginPosOffset;
 			pline.setFrom(lineOffset.x+left,lineOffset.y+top);
 		}
-		/*Á¬½Óµ½½ÚµãµÄÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var pline = node.endPolyLine[i];
 			var lineOffset = pline.endPosOffset;
@@ -199,7 +198,7 @@ function NodeListener(node){
 		container.unSelectAll();
 		container.currentSelectedComponent = node;
 		node.showController();
-		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){/*Èç¹ûÊÇ»­½ÚµãÄ£Ê½ÏÂ*/
+		if(container.operationMode == Constants.BTN_SELECT_TYPE || container.operationMode == Constants.BTN_NODE_TYPE){//å¦‚æœæ˜¯ç”»èŠ‚ç‚¹æ¨¡å¼ä¸‹
 			$(node.getUI()).bind('mousemove',onMouseMove);
 			$(node.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(node.getUI(),e);
@@ -211,23 +210,23 @@ function NodeListener(node){
 	}
 
 	function onMouseUp(e){
-		/*½«Á¬½ÓÔÚ¸Ã½ÚµãÉÏµÄÏßµÄÆğÖ¹×ø±ê¸üĞÂ
-		  ´Ó½ÚµãÑÓÉì³öÈ¥µÄÖ±Ïß£¬¸üĞÂfrom*/
+		//å°†è¿æ¥åœ¨è¯¥èŠ‚ç‚¹ä¸Šçš„çº¿çš„èµ·æ­¢åæ ‡æ›´æ–°
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„ç›´çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginLine.length;i<j;i++){
 			var line = node.beginLine[i];
 			line.setControllerPosition();
 		}
-		/*Á¬½Óµ½½ÚµãµÄÖ±Ïß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„ç›´çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endLine.length;i<j;i++){
 			var line = node.endLine[i];
 			line.setControllerPosition();
 		}
-		/*´Ó½ÚµãÑÓÉì³öÈ¥µÄÕÛÏß£¬¸üĞÂfrom*/
+		//ä»èŠ‚ç‚¹å»¶ä¼¸å‡ºå»çš„æŠ˜çº¿ï¼Œæ›´æ–°from
 		for(var i=0,j=node.beginPolyLine.length;i<j;i++){
 			var line = node.beginPolyLine[i];
 			line.setControllerPosition();
 		}
-		/*Á¬½Óµ½½ÚµãµÄÕÛÏß£¬¸üĞÂto*/
+		//è¿æ¥åˆ°èŠ‚ç‚¹çš„æŠ˜çº¿ï¼Œæ›´æ–°to
 		for(var i=0,j=node.endPolyLine.length;i<j;i++){
 			var line = node.endPolyLine[i];
 			line.setControllerPosition();
@@ -310,11 +309,11 @@ function RectZone(node,type,w,h){
 	}
 
 	this.getMiddlePoints = function(fromPos,toPos){
-		/*topºÍbottomÈÈÇø*/
+		//å¦‚æœæ˜¯topå’Œbottomçƒ­åŒº
 		if(this.type == Constants.RectZone_TOP || this.type == Constants.RectZone_BOTTOM){
-			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};/*ÖĞ¼äµãx²»±ä£¬yÓÉtoPos¶¨*/
-		}else{/*left right ÈÈÇø*/
-			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};/*ÖĞ¼äµãy²»±ä£¬xÓÉfromPos¶¨*/
+			return  {x:parseInt(fromPos.x,10),y:parseInt(toPos.y,10)};//ä¸­é—´ç‚¹xä¸å˜ï¼Œyç”±toPoså®š
+		}else{//left right çƒ­åŒº
+			return  {x:parseInt(toPos.x,10),y:parseInt(fromPos.y,10)};//ä¸­é—´ç‚¹yä¸å˜ï¼Œxç”±fromPoså®š
 		}
 	}
 	new RectZoneListener(this);
@@ -350,8 +349,8 @@ function RectZoneListener(rect){
 function Container(){
 	this.id = 1;
 	this.operationMode = Constants.BTN_NODE_TYPE;
-	this.fromNode = null;/* Ïß´ÓÄÄ¸öÈÈÇø(RectZone)¿ªÊ¼*/
-	this.toNode = null;/*ÏßÔÚÄÄ¸öÈÈÇø(RectZone)½áÊø*/
+	this.fromNode = null;//çº¿ä»å“ªä¸ªçƒ­åŒº(RectZone)å¼€å§‹
+	this.toNode = null;//çº¿åœ¨å“ªä¸ªçƒ­åŒº(RectZone)ç»“æŸ
 	this.startDraw = false;
 	this.ui = HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="workflow-container" style="position:relative;top:35px;"></div>');
     this.lines = [];
@@ -368,13 +367,13 @@ function Container(){
 	}
 
 	this.addLine = function(line,mousePos){
-		var fromNodePos = this.fromNode.node.getPosition();/*¿ªÊ¼ÍÏ×§µÄ½ÚµãµÄ¾ø¶ÔÎ»ÖÃ*/
-		var containerPos = this.getPosition();/*»ñµÃcontainerµÄ¾ø¶ÔÎ»ÖÃ*/
-		/*Ä¿Ç°ÓÉÓÚÏßÊÇÔÚnodeÏÂ·½£¬ËùÒÔÆğÊ¼Î»ÖÃ¾ÍÓÃfromRectµÄÎ»ÖÃ£¨×óÉÏ½Ç£©*/
+		var fromNodePos = this.fromNode.node.getPosition();//å¼€å§‹æ‹–æ‹½çš„èŠ‚ç‚¹çš„ç»å¯¹ä½ç½®
+		var containerPos = this.getPosition();//è·å¾—containerçš„ç»å¯¹ä½ç½®
+		//ç›®å‰ç”±äºçº¿æ˜¯åœ¨nodeä¸‹æ–¹ï¼Œæ‰€ä»¥èµ·å§‹ä½ç½®å°±ç”¨fromRectçš„ä½ç½®ï¼ˆå·¦ä¸Šè§’ï¼‰
 		var fromPos = container.fromNode.getEdgePos(mousePos,container);
 		line.setFrom(fromPos.x,fromPos.y);
 		line.setTo(fromPos.x,fromPos.y);
-		/*ÉèÖÃÏßÔÚÆğÊ¼½ÚµãÉÏµÄÏà¶ÔÎ»ÖÃ£¬ÒÔ±ãÒÔºó½ÚµãÒÆ¶¯Ê±¸üĞÂ*/
+		//è®¾ç½®çº¿åœ¨èµ·å§‹èŠ‚ç‚¹ä¸Šçš„ç›¸å¯¹ä½ç½®ï¼Œä»¥ä¾¿ä»¥åèŠ‚ç‚¹ç§»åŠ¨æ—¶æ›´æ–°
 		line.beginPosOffset = {x:fromPos.x-fromNodePos.x+containerPos.x,y:fromPos.y-fromNodePos.y+containerPos.y};
 		HtmlUtil.prepend(this.getUI(),line.getUI());
 		this.lines.push(line);
@@ -428,12 +427,12 @@ function ContainerListener(container){
 
 	function onClick(e){
 		var mousePos = HtmlUtil.mouseCoords(e);	
-		container.unSelectAll();/*Çå¿ÕÑ¡ÖĞµÄ×é¼ş£¬³ıÁËµ±Ç°µã»÷µÄ×é¼şÍâ*/
+		container.unSelectAll();//æ¸…ç©ºé€‰ä¸­çš„ç»„ä»¶ï¼Œé™¤äº†å½“å‰ç‚¹å‡»çš„ç»„ä»¶å¤–
 		switch(container.operationMode){
 			case Constants.BTN_SELECT_TYPE:			
 				break;
 			case Constants.BTN_NODE_TYPE:
-				/*Èç¹û³öÓÚÌí¼Ó½ÚµãÄ£Ê½£¬µ¥»÷ºó´´½¨Ò»¸önode£¬È»ºó¼Óµ½Êó±êÎ»ÖÃ*/
+				//å¦‚æœå‡ºäºæ·»åŠ èŠ‚ç‚¹æ¨¡å¼ï¼Œå•å‡»ååˆ›å»ºä¸€ä¸ªnodeï¼Œç„¶ååŠ åˆ°é¼ æ ‡ä½ç½®
 				var node = new TaskNode(100,40,container,container.id);
 				container.id ++;
 				container.addNode(node,mousePos);
@@ -454,15 +453,15 @@ function ContainerListener(container){
 	}
 
 	function onMouseDown(e){
-		/*Èç¹ûÊÇ»­ÏßÄ£Ê½ÏÂ*/
+		//å¦‚æœæ˜¯ç”»çº¿æ¨¡å¼ä¸‹
 		if(container.operationMode == Constants.BTN_LINE_TYPE || container.operationMode == Constants.BTN_POLYLINE_TYPE){
-			/*Èç¹ûfromnodeÓĞÖµ£¬ËµÃ÷¿ÉÒÔ¿ªÊ¼»­Ïß*/
+			//å¦‚æœfromnodeæœ‰å€¼ï¼Œè¯´æ˜å¯ä»¥å¼€å§‹ç”»çº¿
 			if(container.fromNode != null){
 				line = new Line(container,container.id);
 				container.id ++;
 				var mousePos = HtmlUtil.mouseCoords(e);
-				startPos = container.addLine(line,mousePos);/*ÉèÖÃÊó±ê¿ªÊ¼»­ÏßµÄÎ»ÖÃ*/
-				container.startDraw = true;/*½«containerÉèÎª¿ªÊ¼»­Ïß*/
+				startPos = container.addLine(line,mousePos);//è®¾ç½®é¼ æ ‡å¼€å§‹ç”»çº¿çš„ä½ç½®
+				container.startDraw = true;//å°†containerè®¾ä¸ºå¼€å§‹ç”»çº¿
 				$(container.getUI()).bind('mousemove',onMouseMove);
 				$(container.getUI()).bind('mouseup',onMouseUp);
 				containerPosition = container.getPosition();
@@ -483,28 +482,28 @@ function ContainerListener(container){
 	function onMouseUp(e){
 		e  = e || window.event;
 		var mousePos = HtmlUtil.mouseCoords(e);
-		/*Èç¹ûËÉ¿ªÊó±êµÄÎ»ÖÃÊÇ»­ÏßÇø£¬¼´toNodeÓĞÖµµÄ»°£¬»­Ïß£¬·ñÔò£¬É¾³ıline*/
+		//å¦‚æœæ¾å¼€é¼ æ ‡çš„ä½ç½®æ˜¯ç”»çº¿åŒºï¼Œå³toNodeæœ‰å€¼çš„è¯ï¼Œç”»çº¿ï¼Œå¦åˆ™ï¼Œåˆ é™¤line
 		if(container.toNode == null || !container.toNode.node.canAddLine(container.fromNode.node)){
 			container.deleteComponent(line);
 		}else{
 			var toPos = container.toNode.getEdgePos(mousePos,container);
 			line.setTo(toPos.x,toPos.y);
-			/*ÉèÖÃÏßÔÚ½áÊø½ÚµãÉÏµÄÏà¶ÔÎ»ÖÃ£¬ÒÔ±ãÒÔºó½ÚµãÒÆ¶¯Ê±¸üĞÂ*/
-			var toNodePos = container.toNode.node.getPosition();/*½áÊøÏßËùÔÚ½ÚµãµÄ¾ø¶ÔÎ»ÖÃ*/
-			var containerPos = container.getPosition();/*»ñµÃcontainerµÄ¾ø¶ÔÎ»ÖÃ*/
+			//è®¾ç½®çº¿åœ¨ç»“æŸèŠ‚ç‚¹ä¸Šçš„ç›¸å¯¹ä½ç½®ï¼Œä»¥ä¾¿ä»¥åèŠ‚ç‚¹ç§»åŠ¨æ—¶æ›´æ–°
+			var toNodePos = container.toNode.node.getPosition();//ç»“æŸçº¿æ‰€åœ¨èŠ‚ç‚¹çš„ç»å¯¹ä½ç½®
+			var containerPos = container.getPosition();//è·å¾—containerçš„ç»å¯¹ä½ç½®
 			line.endPosOffset = {x:toPos.x-(toNodePos.x-containerPos.x),y:toPos.y-(toNodePos.y-containerPos.y)};
-			if(container.operationMode == Constants.BTN_LINE_TYPE){/*Èç¹ûÊÇ»­Ö±ÏßÄ£Ê½ÏÂ*/
+			if(container.operationMode == Constants.BTN_LINE_TYPE){//å¦‚æœæ˜¯ç”»ç›´çº¿æ¨¡å¼ä¸‹
 				line.finishLine();
-				/*½«Ïß·Ö±ğ¸³Öµ¸øÁ¬½ÓµÄÁ½¶ËnodeµÄbeginLineºÍendLine*/
+				//å°†çº¿åˆ†åˆ«èµ‹å€¼ç»™è¿æ¥çš„ä¸¤ç«¯nodeçš„beginLineå’ŒendLine
 				container.fromNode.addBeginLine(line);
 				container.toNode.addEndLine(line);
 				line.beginNode = container.fromNode.node;
 				line.endNode = container.toNode.node;
 			}
-			if(container.operationMode == Constants.BTN_POLYLINE_TYPE){/*Èç¹ûÊÇ»­ÕÛÏßµÄÄ£Ê½*/
-				/*¸ù¾İfromZoneÀ´»ñµÃfrom to middleµÄ×ø±ê*/
+			if(container.operationMode == Constants.BTN_POLYLINE_TYPE){//å¦‚æœæ˜¯ç”»æŠ˜çº¿çš„æ¨¡å¼
+				//æ ¹æ®fromZoneæ¥è·å¾—from to middleçš„åæ ‡
 				var middlePos = container.fromNode.getMiddlePoints(line.getFrom(),line.getTo());
-				/*¹¹ÔìÕÛÏß£¬½«ÕÛÏß»­ÔÚcontainerÉÏ*/
+				//æ„é€ æŠ˜çº¿ï¼Œå°†æŠ˜çº¿ç”»åœ¨containerä¸Š
 				var polyLine = new PolyLine(container,container.id);
 				container.id ++;
 				container.addPolyLine(polyLine);
@@ -515,7 +514,7 @@ function ContainerListener(container){
 				polyLine.endPosOffset = line.endPosOffset;
 				polyLine.finishLine();
 				polyLine.addController(container);
-				/*È»ºóÉ¾³ıline*/
+				//ç„¶ååˆ é™¤line
 				container.deleteComponent(line);
 				container.fromNode.addBeginPolyLine(polyLine);
 				container.toNode.addEndPolyLine(polyLine);
@@ -542,17 +541,17 @@ function Line(container,id){
 	this.container = container;
 	this.ui = HtmlUtil.newElement('<v:line style="position:absolute;z-index:11;"></v:line>');
 	this.arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
-	/*Ïß·ÖÁ½¶Ë£¬begin¶ËºÍend¶Ë£¬ÕâÀïµÄÁ½¸öÊôĞÔÓÃÀ´¼ÇÂ¼ÏßµÄÕâÁ½¶ËÔÚ¸÷×ÔµÄnodeÉÏµÄÆ«ÒÆÁ¿£¬ÓÃÓÚµ±nodeÍÏ×§Ê±ÖØĞÂ¶¨ÒåÏßµÄÎ»ÖÃ*/
+	//çº¿åˆ†ä¸¤ç«¯ï¼Œbeginç«¯å’Œendç«¯ï¼Œè¿™é‡Œçš„ä¸¤ä¸ªå±æ€§ç”¨æ¥è®°å½•çº¿çš„è¿™ä¸¤ç«¯åœ¨å„è‡ªçš„nodeä¸Šçš„åç§»é‡ï¼Œç”¨äºå½“nodeæ‹–æ‹½æ—¶é‡æ–°å®šä¹‰çº¿çš„ä½ç½®
 	this.beginPosOffset;
 	this.endPosOffset;
-	this.fromPos;/*×¢Òâ£¬ÊÇÏà¶ÔÓÚcontainerµÄ×ø±ê*/
-	this.toPos;/*×¢Òâ£¬ÊÇÏà¶ÔÓÚcontainerµÄ×ø±ê*/
+	this.fromPos;//æ³¨æ„ï¼Œæ˜¯ç›¸å¯¹äºcontainerçš„åæ ‡
+	this.toPos;//æ³¨æ„ï¼Œæ˜¯ç›¸å¯¹äºcontainerçš„åæ ‡
 	this.beginController;
 	this.endController;
 	this.beginNode;
 	this.endNode;
 
-	/*beginºÍendcontroller ÉèÖÃ,¸ù¾İ·½ÏòÀ´¼ÆËãbeginºÍendcontrollerµÄtopºÍleft(Ïà¶Ôline¶ø²»ÊÇÏà¶Ôcontainer)*/
+	//beginå’Œendcontroller è®¾ç½®,æ ¹æ®æ–¹å‘æ¥è®¡ç®—beginå’Œendcontrollerçš„topå’Œleft(ç›¸å¯¹lineè€Œä¸æ˜¯ç›¸å¯¹container)
 	this.setControllerPosition = function(){
 		if(!this.beginController || !this.endController){
 			return;
@@ -613,24 +612,24 @@ Line.prototype.hideController = function(){
 	HtmlUtil.hide(this.beginController.getUI());
 	HtmlUtil.hide(this.endController.getUI());
 }
-/* É¾³ıUI*/
+//åˆ é™¤UI
 Line.prototype.removeUI = function(){
 	HtmlUtil.remove(this.getUI());
-	/*½«beginNodeÉÏµÄbeginLineÀïµÄ×Ô¼ºÉ¾³ı*/
+	//å°†beginNodeä¸Šçš„beginLineé‡Œçš„è‡ªå·±åˆ é™¤
 	if(this.beginNode){
 		this.beginNode.beginLine.removeObj(this);
-		/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ıline.endNode*/
+		//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤line.endNode
 		this.beginNode.nextNode.removeObj(this.endNode);
 	}
-	/*½«endNodeÉÏµÄendLineÀïµÄ×Ô¼ºÉ¾³ı*/
+    //å°†endNodeä¸Šçš„endLineé‡Œçš„è‡ªå·±åˆ é™¤
 	if(this.endNode){
 		this.endNode.endLine.removeObj(this);
-		/*´ÓendNodeµÄbeforeNodeÀïÉ¾³ıline.beginNode*/
+		//ä»endNodeçš„beforeNodeé‡Œåˆ é™¤line.beginNode
 		this.endNode.beforeNode.removeObj(this.beginNode);
 	}
 }
 Line.prototype.finishLine = function(){
-	/*¸øÏß»­ÉÏ¼ıÍ·£¬¼ÓÉÏ¿ØÖÆµã*/
+	//ç»™çº¿ç”»ä¸Šç®­å¤´ï¼ŒåŠ ä¸Šæ§åˆ¶ç‚¹
 	HtmlUtil.append(this.getUI(),this.arrow);
 	this.beginController = new LineController(this.container,this,5,5);
 	this.endController = new LineController(this.container,this,5,5);
@@ -686,7 +685,7 @@ function LineListener(line){
 function PolyLine(container,id){
 	Line.call(this,container,id);
 	this.componentType = Constants.COMPONENT_TYPE_POLYLINE;
-	this.controller;//ÖĞ¼äµÄ¿ØÖÆµã
+	this.controller;//ä¸­é—´çš„æ§åˆ¶ç‚¹
 	this.ui = HtmlUtil.newElement('<v:polyline filled="false" style="position:absolute;z-index:11;"></v:polyline>');
 	this.arrow = HtmlUtil.newElement('<v:Stroke dashstyle="solid" endarrow="classic"/>');
 	this.middlePos;
@@ -729,21 +728,21 @@ function PolyLine(container,id){
 		HtmlUtil.after(this.getUI(),this.controller.getUI());
 	}
 
-	/*É¾³ıUI Ã¿¸öcomponent¶¼µÃÓĞ node line polyline*/
+	//åˆ é™¤UI æ¯ä¸ªcomponentéƒ½å¾—æœ‰ node line polyline
 	this.removeUI = function(){
 		HtmlUtil.remove(this.getUI());
 		HtmlUtil.remove(this.controller.getUI());
 		this.controller=null;
-		/*½«beginNodeÉÏµÄbeginLineÀïµÄ×Ô¼ºÉ¾³ı*/
+		//å°†beginNodeä¸Šçš„beginLineé‡Œçš„è‡ªå·±åˆ é™¤
 		if(this.beginNode){
 			this.beginNode.beginPolyLine.removeObj(this);
-			/*´ÓbeforeNodeµÄnextNodeÀïÉ¾³ıline.endNode*/
+			//ä»beforeNodeçš„nextNodeé‡Œåˆ é™¤line.endNode
 			this.beginNode.nextNode.removeObj(this.endNode);
 		}
-		/*½«endNodeÉÏµÄendLineÀïµÄ×Ô¼ºÉ¾³ı*/
+		//å°†endNodeä¸Šçš„endLineé‡Œçš„è‡ªå·±åˆ é™¤
 		if(this.endNode){
 			this.endNode.endPolyLine.removeObj(this);
-			/*´ÓendNodeµÄbeforeNodeÀïÉ¾³ıline.beginNode*/
+			//ä»endNodeçš„beforeNodeé‡Œåˆ é™¤line.beginNode
 			this.endNode.beforeNode.removeObj(this.beginNode);
 		}
 	}
@@ -783,13 +782,13 @@ function PolyLineControllerListener(controller){
 		var left = Math.max((mousePos.x - mouseOffset.x - containerPosition.x),0);
 		HtmlUtil.setLeft(controller.getUI(),left + 'px');
 
-		/*ÒÆ¶¯µÄÍ¬Ê±£¬¸üĞÂpolylineµÄmiddlePoint×ø±ê*/
+		//ç§»åŠ¨çš„åŒæ—¶ï¼Œæ›´æ–°polylineçš„middlePointåæ ‡
 		controller.pline.setMiddle(left,top);
 		e.stopPropagation();
 	}
 
 	function onMouseDown(e){
-		if(container.operationMode == Constants.BTN_SELECT_TYPE){/*Èç¹ûÊÇÑ¡ÔñÄ£Ê½ÏÂ*/
+		if(container.operationMode == Constants.BTN_SELECT_TYPE){//å¦‚æœæ˜¯é€‰æ‹©æ¨¡å¼ä¸‹
 			$(controller.getUI()).bind('mousemove',onMouseMove);
 			$(controller.getUI()).bind('mouseup',onMouseUp);
 			mouseOffset = HtmlUtil.getMouseOffset(controller.getUI(),e);
