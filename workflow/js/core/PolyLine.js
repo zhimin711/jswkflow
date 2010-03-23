@@ -80,6 +80,10 @@ function PolyLineController(container,pline,w,h){
 	HtmlUtil.setHeight(this.getUI(),this.h);
 
 	new PolyLineControllerListener(this);
+
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
 }
 PolyLineController.prototype = new UIComponent();
 
@@ -91,7 +95,7 @@ function PolyLineControllerListener(controller){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0);
 		HtmlUtil.setTop(controller.getUI(),top + 'px');
 
