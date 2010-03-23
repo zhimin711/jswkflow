@@ -20,12 +20,9 @@ function Container(){
 
 	this.addLine = function(line,mousePos){
 		var fromNodePos = this.fromNode.node.getPosition();//开始拖拽的节点的绝对位置
-		log.error("fromZonePos.x:"+fromNodePos.x+" fromZonePos.y:"+fromNodePos.y)
 		var containerPos = this.getPosition();//获得container的绝对位置
 		//目前由于线是在node下方，所以起始位置就用fromRect的位置（左上角）
 		var fromPos = container.fromNode.getEdgePos(mousePos,container);
-		log.error("mousePos.x:"+mousePos.x+" mousePos.y:"+mousePos.y)
-		log.error("fromPos.x:"+fromPos.x+" fromPos.y:"+fromPos.y)
 		line.setFrom(fromPos.x,fromPos.y);
 		line.setTo(fromPos.x,fromPos.y);
 		//设置线在起始节点上的相对位置，以便以后节点移动时更新
