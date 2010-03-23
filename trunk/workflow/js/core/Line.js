@@ -50,6 +50,10 @@ function Line(container,id){
 	}
 	new LineListener(this);
 
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
+
 }
 Line.prototype = new UIComponent();
 
@@ -124,17 +128,17 @@ function LineController(container,line,w,h){
 	this.container = container;
 
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="controller-zone" style="position:absolute;z-index:12;display:none;"></div>');
-	this.getUI = function(){
-		return this.ui;
-	};
 
 	HtmlUtil.setWidth(this.getUI(),this.w);
 	HtmlUtil.setHeight(this.getUI(),this.h);
 
 	this.getPosition = function(){
-		return HtmlUtil.getCoords(this.getUI());
-	};
+		return HtmlUtil.getCoords(this.getUI(),this.line.container.getUI());
+	}
+
 }
+LineController.prototype = new UIComponent();
+
 function LineListener(line){
     var onClick = function(e){
 		line.container.unSelectAll();

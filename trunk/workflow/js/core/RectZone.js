@@ -58,6 +58,10 @@ function RectZone(node,type,w,h){
 		}
 	}
 	new RectZoneListener(this);
+
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.node.container.getUI());
+	}
 }
 RectZone.prototype =  new UIComponent();
 

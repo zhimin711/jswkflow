@@ -20,9 +20,12 @@ function Container(){
 
 	this.addLine = function(line,mousePos){
 		var fromNodePos = this.fromNode.node.getPosition();//开始拖拽的节点的绝对位置
+		log.error("fromZonePos.x:"+fromNodePos.x+" fromZonePos.y:"+fromNodePos.y)
 		var containerPos = this.getPosition();//获得container的绝对位置
 		//目前由于线是在node下方，所以起始位置就用fromRect的位置（左上角）
 		var fromPos = container.fromNode.getEdgePos(mousePos,container);
+		log.error("mousePos.x:"+mousePos.x+" mousePos.y:"+mousePos.y)
+		log.error("fromPos.x:"+fromPos.x+" fromPos.y:"+fromPos.y)
 		line.setFrom(fromPos.x,fromPos.y);
 		line.setTo(fromPos.x,fromPos.y);
 		//设置线在起始节点上的相对位置，以便以后节点移动时更新
@@ -78,7 +81,7 @@ function ContainerListener(container){
 	var startPos;
 
 	function onClick(e){
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		container.unSelectAll();//清空选中的组件，除了当前点击的组件外
 		switch(container.operationMode){
 			case Constants.BTN_SELECT_TYPE:			
@@ -111,7 +114,7 @@ function ContainerListener(container){
 			if(container.fromNode != null){
 				line = new Line(container,container.id);
 				container.id ++;
-				var mousePos = HtmlUtil.mouseCoords(e);
+				var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
 				startPos = container.addLine(line,mousePos);//设置鼠标开始画线的位置
 				container.startDraw = true;//将container设为开始画线
 				$(container.getUI()).bind('mousemove',onMouseMove);
@@ -123,7 +126,8 @@ function ContainerListener(container){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
+		//log.error("when move ("+(mousePos.x-containerPosition.x)+","+(mousePos.y-containerPosition.y)+")");
 		if(mousePos.x<=startPos.x){
 			line.setTo(mousePos.x-containerPosition.x+3,mousePos.y-containerPosition.y+2);
 		}else{
@@ -133,7 +137,7 @@ function ContainerListener(container){
 
 	function onMouseUp(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
 		//如果松开鼠标的位置是画线区，即toNode有值的话，画线，否则，删除line
 		if(container.toNode == null || !container.toNode.node.canAddLine(container.fromNode.node)){
 			container.deleteComponent(line);

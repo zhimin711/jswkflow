@@ -89,6 +89,11 @@ function TaskNode(w,h,container,id){
 		}
 	}
 	new NodeListener(this);
+	
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
+	
 }
 TaskNode.prototype =  new UIComponent();
 TaskNode.prototype.showController = function(){
@@ -149,7 +154,7 @@ function NodeListener(node){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0);
 		HtmlUtil.setTop(node.getUI(),top + 'px');
 
