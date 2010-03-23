@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project default="compile" name="jsworkflow">
+	<description>
+		a workflow using javascript
+	</description>
+	<property description="Folder for jquery and min target" name="dist" value="js" />
+	<target name="concatfile">
+		<concat destfile="js/workflowUtil.js" append="false">
+			<!--<fileset dir="js/util" includes="*.js" />-->
+			<fileset file="js/util/htmlutil.js" />
+            <fileset file="js/util/logger.js" />
+            <fileset file="js/util/array.js" />
+            <fileset file="js/util/Contants.js" />
+		</concat>
+		<concat destfile="js/workflow.js" append="false">
+			<fileset file="js/core/UIComponent.js" />
+            <fileset file="js/core/TaskNode.js" />
+            <fileset file="js/core/RectZone.js" />
+            <fileset file="js/core/Container.js" />
+            <fileset file="js/core/Line.js" />
+            <fileset file="js/core/PolyLine.js" />
+            <fileset file="js/core/StartNode.js" />
+            <fileset file="js/core/Button.js" />
+            <fileset file="js/core/ToolBar.js" />
+		</concat>
+	</target>
+	           
+	<target name="compile" depends="concatfile">
+		<echo>${basedir}</echo>
+
+		<exec executable="cmd" failonerror="true">
+			<arg value="/c" />
+			<arg value="java" />
+			<arg value="-jar" />
+			<arg value="${basedir}\js\compiler.jar" />
+			<arg value="--js" />
+			<arg value="${basedir}\js\workflow.js" />
+			<arg value="--js_output_file" />
+			<arg value="${basedir}\js\workflow_mini.js" />
+		</exec>
+		<exec executable="cmd" failonerror="true">
+			<arg value="/c" />
+			<arg value="java" />
+			<arg value="-jar" />
+			<arg value="${basedir}\js\compiler.jar" />
+			<arg value="--js" />
+			<arg value="${basedir}\js\workflowUtil.js" />
+			<arg value="--js_output_file" />
+			<arg value="${basedir}\js\workflowUtil_mini.js" />
+		</exec>
+	</target>
+</project>
+
+
