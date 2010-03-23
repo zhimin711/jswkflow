@@ -1,27 +1,45 @@
 function HtmlUtil(){}
 
-HtmlUtil.getCoords = function (el){
+HtmlUtil.getCoords = function (el,context){
 	el = $(el).get(0);
 	var box = el.getBoundingClientRect(),
 	doc = el.ownerDocument,
 	body = doc.body,
 	html = doc.documentElement,
 	clientTop = html.clientTop || body.clientTop || 0,
-	clientLeft = html.clientLeft || body.clientLeft || 0,
-	top  = box.top  + (self.pageYOffset || html.scrollTop  ||  body.scrollTop ) - clientTop,
-	left = box.left + (self.pageXOffset || html.scrollLeft ||  body.scrollLeft) - clientLeft;
+	clientLeft = html.clientLeft || body.clientLeft || 0;
+
+	var contextScroll = {
+		scrollLeft:0,
+		scrollTop:0
+	};
+	if(context){
+		contextScroll = $(context).get(0);
+	}
 	
+	var top  = box.top  + (self.pageYOffset || html.scrollTop  ||  body.scrollTop ) - clientTop + contextScroll.scrollTop;
+	var left = box.left + (self.pageXOffset || html.scrollLeft ||  body.scrollLeft) - clientLeft +  contextScroll.scrollLeft;
+
 	return { x: left, y: top };
 }
 
 
-HtmlUtil.mouseCoords = function (ev){
-	if(ev.pageX || ev.pageY){
+HtmlUtil.mouseCoords = function (ev,context){
+	
+	/*if(ev.pageX || ev.pageY){
+		
 		return {x:ev.pageX, y:ev.pageY};
+	}*/
+	var contextScroll = {
+		scrollLeft:0,
+		scrollTop:0
+	}
+	if(context){
+		contextScroll = $(context).get(0);
 	}
 	return {
-		x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
-		y:ev.clientY + document.body.scrollTop  - document.body.clientTop
+		x:ev.clientX + document.body.scrollLeft - document.body.clientLeft + contextScroll.scrollLeft,
+		y:ev.clientY + document.body.scrollTop  - document.body.clientTop + contextScroll.scrollTop
 	};
 }
 
