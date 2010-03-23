@@ -1,13 +1,14 @@
 function UIComponent(){
 	
 };
-UIComponent.prototype.getPosition = function(){
-	return HtmlUtil.getCoords(this.getUI());
+UIComponent.prototype.getPosition = function(context){
+	return HtmlUtil.getCoords(this.getUI(),context);
 };
 
 UIComponent.prototype.getUI = function(){
 	return this.ui;
 };
+
 function TaskNode(w,h,container,id){
 	this.id = id;
 	this.container = container;
@@ -99,6 +100,11 @@ function TaskNode(w,h,container,id){
 		}
 	}
 	new NodeListener(this);
+	
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
+	
 }
 TaskNode.prototype =  new UIComponent();
 TaskNode.prototype.showController = function(){
@@ -159,7 +165,7 @@ function NodeListener(node){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0);
 		HtmlUtil.setTop(node.getUI(),top + 'px');
 
@@ -257,6 +263,18 @@ function NodeContent(type,content){
 }
 NodeContent.prototype = new UIComponent();
 
+
+
+
+
+
+
+
+
+
+
+
+
 function RectZone(node,type,w,h){
 	this.node = node;
 	this.type = type;
@@ -317,6 +335,10 @@ function RectZone(node,type,w,h){
 		}
 	}
 	new RectZoneListener(this);
+
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.node.container.getUI());
+	}
 }
 RectZone.prototype =  new UIComponent();
 
@@ -344,9 +366,7 @@ function RectZoneListener(rect){
 	}
 	$(rect.getUI()).bind('mouseover',onMouseOver);
 	$(rect.getUI()).bind('mouseout',onMouseOut);
-}
-
-function Container(){
+}function Container(){
 	this.id = 1;
 	this.operationMode = Constants.BTN_NODE_TYPE;
 	this.fromNode = null;//线从哪个热区(RectZone)开始
@@ -426,7 +446,7 @@ function ContainerListener(container){
 	var startPos;
 
 	function onClick(e){
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		container.unSelectAll();//清空选中的组件，除了当前点击的组件外
 		switch(container.operationMode){
 			case Constants.BTN_SELECT_TYPE:			
@@ -459,7 +479,7 @@ function ContainerListener(container){
 			if(container.fromNode != null){
 				line = new Line(container,container.id);
 				container.id ++;
-				var mousePos = HtmlUtil.mouseCoords(e);
+				var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
 				startPos = container.addLine(line,mousePos);//设置鼠标开始画线的位置
 				container.startDraw = true;//将container设为开始画线
 				$(container.getUI()).bind('mousemove',onMouseMove);
@@ -471,7 +491,8 @@ function ContainerListener(container){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
+		//log.error("when move ("+(mousePos.x-containerPosition.x)+","+(mousePos.y-containerPosition.y)+")");
 		if(mousePos.x<=startPos.x){
 			line.setTo(mousePos.x-containerPosition.x+3,mousePos.y-containerPosition.y+2);
 		}else{
@@ -481,7 +502,7 @@ function ContainerListener(container){
 
 	function onMouseUp(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());
 		//如果松开鼠标的位置是画线区，即toNode有值的话，画线，否则，删除line
 		if(container.toNode == null || !container.toNode.node.canAddLine(container.fromNode.node)){
 			container.deleteComponent(line);
@@ -533,9 +554,7 @@ function ContainerListener(container){
 
 	$(container.getUI()).bind('click',onClick);
 	$(container.getUI()).bind('mousedown',onMouseDown);
-}
-
-function Line(container,id){
+}function Line(container,id){
 	this.id = id;
 	this.componentType = Constants.COMPONENT_TYPE_LINE;
 	this.container = container;
@@ -586,6 +605,10 @@ function Line(container,id){
 
 	}
 	new LineListener(this);
+
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
 
 }
 Line.prototype = new UIComponent();
@@ -661,17 +684,17 @@ function LineController(container,line,w,h){
 	this.container = container;
 
 	this.ui =  HtmlUtil.newElement('<div onselectstart="javascript:return false;" class="controller-zone" style="position:absolute;z-index:12;display:none;"></div>');
-	this.getUI = function(){
-		return this.ui;
-	};
 
 	HtmlUtil.setWidth(this.getUI(),this.w);
 	HtmlUtil.setHeight(this.getUI(),this.h);
 
 	this.getPosition = function(){
-		return HtmlUtil.getCoords(this.getUI());
-	};
+		return HtmlUtil.getCoords(this.getUI(),this.line.container.getUI());
+	}
+
 }
+LineController.prototype = new UIComponent();
+
 function LineListener(line){
     var onClick = function(e){
 		line.container.unSelectAll();
@@ -680,9 +703,7 @@ function LineListener(line){
 		e.stopPropagation();
 	};
 	$(line.getUI()).bind('click',onClick);
-}
-
-function PolyLine(container,id){
+}function PolyLine(container,id){
 	Line.call(this,container,id);
 	this.componentType = Constants.COMPONENT_TYPE_POLYLINE;
 	this.controller;//中间的控制点
@@ -764,6 +785,10 @@ function PolyLineController(container,pline,w,h){
 	HtmlUtil.setHeight(this.getUI(),this.h);
 
 	new PolyLineControllerListener(this);
+
+	this.getPosition = function(){
+		return HtmlUtil.getCoords(this.getUI(),this.container.getUI());
+	}
 }
 PolyLineController.prototype = new UIComponent();
 
@@ -775,7 +800,7 @@ function PolyLineControllerListener(controller){
 
 	function onMouseMove(e){
 		e  = e || window.event;
-		var mousePos = HtmlUtil.mouseCoords(e);	
+		var mousePos = HtmlUtil.mouseCoords(e,container.getUI());	
 		var top = Math.max((mousePos.y - mouseOffset.y - containerPosition.y),0);
 		HtmlUtil.setTop(controller.getUI(),top + 'px');
 
@@ -809,9 +834,7 @@ function PolyLineControllerListener(controller){
 	}
 
 	$(controller.getUI()).bind('mousedown',onMouseDown);
-}
-
-function StartNode(w,h,container,id){
+}function StartNode(w,h,container,id){
 	TaskNode.call(this,w,h,container,id);
 	this.canDrop = false;
 }
@@ -824,12 +847,10 @@ function EndNode(w,h,container,id){
 
 }
 
-EndNode.prototype =  TaskNode.prototype;
-
-function Button(toolbar,type){
+EndNode.prototype =  TaskNode.prototype;function Button(toolbar,type){
 	this.toolbar = toolbar;
 	this.type = type;
-	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" style="position:absolute;" title="'+type+'"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ type +'" style="position:absolute;"></div>');
 	new ButtonListener(this);
 }
 Button.prototype = new UIComponent();
@@ -857,7 +878,7 @@ function ButtonListener(button){
 function DeleteButton(toolbar){
 	this.toolbar = toolbar;
 	this.type = Constants.BTN_DELETE_TYPE;
-	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ this.type +'" style="position:absolute;" title="'+this.type+'"></div>');
+	this.ui = HtmlUtil.newElement('<div class="workflow-btn '+ this.type +'" style="position:absolute;"></div>');
 	new DelButtonListener(this);
 
 }
@@ -876,9 +897,7 @@ function DelButtonListener(button){
 	
 	$(button.getUI()).bind("mousedown",onMouseDown);
 	$(button.getUI()).bind("mouseup",onMouseUp);
-}
-
-function ToolBar(container){
+}function ToolBar(container){
 	this.ui = HtmlUtil.newElement('<div class="workflow-toolbar" style="position:absolute;"></div>');
 	this.container = container;
 	var btns = [];
@@ -893,37 +912,34 @@ function ToolBar(container){
 	btn_line.setLeft("27px");
 	btns.push(btn_line);
 
-	
+	var btn_polyline = new Button(this,Constants.BTN_POLYLINE_TYPE);
+	btn_polyline.setTop("5px");
+	btn_polyline.setLeft("52px");
+	btns.push(btn_polyline);
 
 	var btn_node = new Button(this,Constants.BTN_NODE_TYPE);
 	btn_node.setTop("5px");
-	btn_node.setLeft("52px");
+	btn_node.setLeft("77px");
 	btns.push(btn_node);
 
 	var btn_startnode = new Button(this,Constants.BTN_STARTNODE_TYPE);
 	btn_startnode.setTop("5px");
-	btn_startnode.setLeft("77px");
+	btn_startnode.setLeft("102px");
 	btns.push(btn_startnode);
 
 	var btn_endnode = new Button(this,Constants.BTN_ENDNODE_TYPE);
 	btn_endnode.setTop("5px");
-	btn_endnode.setLeft("102px");
+	btn_endnode.setLeft("127px");
 	btns.push(btn_endnode);
 
 	var btn_delete = new DeleteButton(this);
 	btn_delete.setTop("5px");
-	btn_delete.setLeft("127px");
+	btn_delete.setLeft("152px");
 	btns.push(btn_delete);
 
-/*
-	var btn_polyline = new Button(this,Constants.BTN_POLYLINE_TYPE);
-	btn_polyline.setTop("5px");
-	btn_polyline.setLeft("152px");
-	btns.push(btn_polyline);
-*/
 	HtmlUtil.append(this.getUI(),btn_select.getUI());
 	HtmlUtil.append(this.getUI(),btn_line.getUI());
-	//HtmlUtil.append(this.getUI(),btn_polyline.getUI());
+	HtmlUtil.append(this.getUI(),btn_polyline.getUI());
 	HtmlUtil.append(this.getUI(),btn_node.getUI());
 	HtmlUtil.append(this.getUI(),btn_startnode.getUI());
 	HtmlUtil.append(this.getUI(),btn_endnode.getUI());
