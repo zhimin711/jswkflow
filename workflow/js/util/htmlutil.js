@@ -108,6 +108,11 @@ HtmlUtil.after = function(target,obj){
 	$(target).after($(obj));
 }
 
+
+HtmlUtil.before = function(target,obj){
+	$(target).before($(obj));
+}
+
 HtmlUtil.show = function(el){
 	
 	$(el).show();
