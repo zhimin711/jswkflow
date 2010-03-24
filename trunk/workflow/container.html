@@ -16,7 +16,7 @@
   <script type="text/javascript" src="js/core/TaskNode.js"></script>
   <script type="text/javascript" src="js/core/RectZone.js"></script>
   <script type="text/javascript" src="js/core/Container.js"></script>
-  <script type="text/javascript" src="js/core/Line.js"></script>
+  <script type="text/javascript" src="js/core/NewLine.js"></script>
   <script type="text/javascript" src="js/core/PolyLine.js"></script>
   <script type="text/javascript" src="js/core/StartNode.js"></script>
   <script type="text/javascript" src="js/core/Button.js"></script>
@@ -199,7 +199,9 @@
  </HEAD>
 
  <BODY>
-	
+<v:shapetype id="arrow" coordsize="6 6"> <!--三角形 向下-->
+    <v:path v="m 0,0 l 3,3,0,6,0,0 x e" />
+</v:shapetype>
 	<SCRIPT LANGUAGE="JavaScript">
 	<!--
 		var log = new Logger("");
